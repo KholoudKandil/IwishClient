@@ -14,12 +14,18 @@ import java.util.Vector;
  * @author Kandil
  */
 
-
+class ContrDetails{
+    private String friendName, prodName;
+    private int contrAmount;
+    
+}
 class UserInfo {
     private String type, reptype; // type of streams
     private String result; // welcome back - wrong user name or pw
     private String usrName, pw, email, fname, lname; // attribute of user
     private Vector <ProdInfo> wishList; // itemms of user
+    private ContrDetails contribution;
+    
     private Vector <String> pendFriends; // Pending friends of user
 
     public String getResult() {
