@@ -143,9 +143,12 @@ public class Client extends javax.swing.JFrame {
         
         for(ProdInfo prod : friendProducts){
         friendWishList.addElement(prod.getName());
+        
         }
+        friendWishList.get(0);
         System.out.print(data.getWishList());
         listFriendWish.setModel(friendWishList);
+        
     }
     
         /**
@@ -817,11 +820,14 @@ public class Client extends javax.swing.JFrame {
         final int YPOSITION  = (screenSize.height - DialogFriendItem.getHeight())/4 ;
         
         // fill the components of dialogbox with the details of (prodName)
+        
         int itemIndex = listFriendWish.getSelectedIndex();
+        System.out.println("listFriendWish"+listFriendWish.getModel());
+        System.out.println("friendProducts" + friendProducts.size());
         labelProdNameFI.setText(friendProducts.elementAt(itemIndex).getName()); 
         labelPriceFI.setText(Integer.toString(friendProducts.elementAt(itemIndex).getPrice()));
         textPaneProdDescFI.setText(friendProducts.elementAt(itemIndex).getDesc());
-        
+        System.out.println(friendProducts.elementAt(itemIndex).getName());
         
         DialogFriendItem.setLocation(XPOSITION, YPOSITION);
         DialogFriendItem.setSize(500, 500);

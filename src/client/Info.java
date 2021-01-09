@@ -24,7 +24,7 @@ class UserInfo {
     private String result; // welcome back - wrong user name or pw
     private String usrName, pw, email, fname, lname; // attribute of user
     private Vector <ProdInfo> wishList; // itemms of user
-    private ContrDetails contribution;
+    private ContrDetails contribution; // obj containing friendname, prodname, contribution amount
     
     private Vector <String> pendFriends; // Pending friends of user
 

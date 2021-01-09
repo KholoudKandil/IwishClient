@@ -1,2 +1,0 @@
-client.ProdInfo
-client.UserInfo
