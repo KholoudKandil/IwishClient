@@ -26,12 +26,12 @@
                       <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="scrollPaneProdDescFI" min="-2" pref="227" max="-2" attributes="0"/>
+                              <Component id="scrollPaneProdDescFI" min="-2" pref="214" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="txtContributionAmountFI" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="172" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="txtContributionAmountFI" max="32767" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="btnContributeFI" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
                           </Group>
@@ -39,7 +39,7 @@
                               <Component id="labelProdNameFI" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="93" max="-2" attributes="0"/>
                               <Component id="labelPriceFI" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="185" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -54,8 +54,8 @@
                           <Component id="labelPriceFI" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="scrollPaneProdDescFI" pref="154" max="32767" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="scrollPaneProdDescFI" min="-2" pref="104" max="-2" attributes="0"/>
+                      <EmptySpace pref="68" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnContributeFI" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtContributionAmountFI" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -75,11 +75,11 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="contribute"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnContributeFIActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtContributionAmountFI">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="jTextField1"/>
-              </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="scrollPaneProdDescFI">
               <AuxValues>
@@ -684,7 +684,7 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnRemoveFriend" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="13" max="32767" attributes="0"/>
                           <Component id="labelNewFriend" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnFriendEmail" min="-2" max="-2" attributes="0"/>
@@ -707,11 +707,11 @@
                       <Properties>
                         <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                           <StringArray count="5">
-                            <StringItem index="0" value="Friend 1"/>
-                            <StringItem index="1" value="Friend 2"/>
-                            <StringItem index="2" value="Friend 3"/>
-                            <StringItem index="3" value="Friend 4"/>
-                            <StringItem index="4" value="Friend 5"/>
+                            <StringItem index="0" value="sara"/>
+                            <StringItem index="1" value="mai"/>
+                            <StringItem index="2" value="alice"/>
+                            <StringItem index="3" value="kholoud"/>
+                            <StringItem index="4" value="mostafa"/>
                           </StringArray>
                         </Property>
                       </Properties>
@@ -734,13 +734,7 @@
                     <Component class="javax.swing.JList" name="listFriendWish">
                       <Properties>
                         <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                          <StringArray count="5">
-                            <StringItem index="0" value="Item 1"/>
-                            <StringItem index="1" value="Item 2"/>
-                            <StringItem index="2" value="Item 3"/>
-                            <StringItem index="3" value="Item 4"/>
-                            <StringItem index="4" value="Item 5"/>
-                          </StringArray>
+                          <StringArray count="0"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -758,9 +752,6 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="labelFriendWishList">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Folan wants"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnRemoveFriend">
                   <Properties>
@@ -811,7 +802,7 @@
                               <Component id="labelAvailableItems" min="-2" max="-2" attributes="0"/>
                               <Component id="scrollPanelAvailableItems" min="-2" pref="143" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="45" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -832,7 +823,7 @@
                               </Group>
                               <Component id="scrollPanelAvailableItems" min="-2" pref="252" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="59" max="32767" attributes="0"/>
+                          <EmptySpace pref="71" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -876,13 +867,7 @@
                     <Component class="javax.swing.JList" name="listAvailableItems">
                       <Properties>
                         <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                          <StringArray count="5">
-                            <StringItem index="0" value="Item 1"/>
-                            <StringItem index="1" value="Item 2"/>
-                            <StringItem index="2" value="Item 3"/>
-                            <StringItem index="3" value="Item 4"/>
-                            <StringItem index="4" value="Item 5"/>
-                          </StringArray>
+                          <StringArray count="0"/>
                         </Property>
                       </Properties>
                       <AuxValues>
@@ -915,12 +900,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrollPanelFriendRequests" alignment="0" pref="315" max="32767" attributes="0"/>
+                      <Component id="scrollPanelFriendRequests" alignment="0" pref="387" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrollPanelFriendRequests" alignment="0" pref="347" max="32767" attributes="0"/>
+                      <Component id="scrollPanelFriendRequests" alignment="0" pref="359" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -964,12 +949,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="315" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="0" pref="387" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="347" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="0" pref="359" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
