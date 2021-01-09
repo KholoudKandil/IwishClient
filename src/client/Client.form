@@ -682,7 +682,7 @@
                               <Component id="scrollPanelFriendWish" pref="195" max="32767" attributes="0"/>
                               <Component id="scrollPanelFriends" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnRemoveFriend" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="labelNewFriend" min="-2" max="-2" attributes="0"/>
@@ -811,7 +811,7 @@
                               <Component id="labelAvailableItems" min="-2" max="-2" attributes="0"/>
                               <Component id="scrollPanelAvailableItems" min="-2" pref="143" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="45" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -832,7 +832,7 @@
                               </Group>
                               <Component id="scrollPanelAvailableItems" min="-2" pref="252" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="71" max="32767" attributes="0"/>
+                          <EmptySpace pref="59" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -915,12 +915,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrollPanelFriendRequests" alignment="0" pref="387" max="32767" attributes="0"/>
+                      <Component id="scrollPanelFriendRequests" alignment="0" pref="315" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrollPanelFriendRequests" alignment="0" pref="359" max="32767" attributes="0"/>
+                      <Component id="scrollPanelFriendRequests" alignment="0" pref="347" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -964,12 +964,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="387" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="0" pref="315" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="359" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="0" pref="347" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
