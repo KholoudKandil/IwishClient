@@ -45,10 +45,12 @@ public class Client extends javax.swing.JFrame {
     PrintStream ps;
     Thread th = null;
     boolean serverIsOff = false; // server status
+    boolean wishListFire= false; // wishlist integraty flag
     Vector <ProdInfo> friendProducts;
     
     String reply;
-
+    UserInfo myInfo;
+    
     public Client() {
         initComponents();
         
@@ -73,6 +75,7 @@ public class Client extends javax.swing.JFrame {
                             reply = msg;
                             if (msg != null) {
                                 //UserInfo data = new Gson().fromJson(msg, UserInfo.class);
+                                System.out.println(msg);
                                 handleRepMsg(msg);
                             }
                         } catch (SocketException e) {
@@ -124,6 +127,36 @@ public class Client extends javax.swing.JFrame {
     void repLogMsg(UserInfo data) {
         if (data.getResult().equals("success")) { // move to next panel
             System.out.println("success");
+            System.out.println(data);
+            myInfo = new UserInfo(data);
+            DefaultListModel temp = new DefaultListModel<>();
+            
+            //filling my wishlist
+            for(ProdInfo prod : myInfo.getWishList()){
+            temp.addElement(prod.getName());
+            }
+            listMyWish.setModel(temp);
+            temp.clear();
+            //filling available products
+            for(ProdInfo prod : myInfo.getAvailableProds()){
+            temp.addElement(prod.getName());
+            }
+            listAvailableItems.setModel(temp);
+            temp.clear();
+            //Filling friend list
+            for(String friend : myInfo.getAprvFriends()){
+            temp.addElement(friend);
+            }
+            listAvailableItems.setModel(temp);
+            temp.clear();
+            
+            //filling user's friend requests
+            for(String friend : myInfo.getPendFriends()){
+            temp.addElement(friend);
+            }
+            listAvailableItems.setModel(temp);
+            temp.clear();
+            
             cl.next(basePane);
         } else {
             System.out.println("Wrong user name or password"); // give dialog box as wrong usr or pw
@@ -141,14 +174,16 @@ public class Client extends javax.swing.JFrame {
     void fWishMsg(UserInfo data){
         DefaultListModel friendWishList = new DefaultListModel<>();
         friendProducts = data.getWishList();
-        
+        System.out.print(friendProducts);
         for(ProdInfo prod : friendProducts){
         friendWishList.addElement(prod.getName());
         
         }
-        friendWishList.get(0);
+        
         System.out.print(data.getWishList());
+        wishListFire = false;
         listFriendWish.setModel(friendWishList);
+        wishListFire = true;
         
     }
     
@@ -812,6 +847,7 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_listFriendsValueChanged
 
     private void listFriendWishValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendWishValueChanged
+       if(wishListFire){
         // TODO add your handling code here:
         String prodName = listFriends.getSelectedValue();
          // fill the comonents of dialogbox with the details of (prodName)
@@ -824,7 +860,8 @@ public class Client extends javax.swing.JFrame {
         
         int itemIndex = listFriendWish.getSelectedIndex();
         System.out.println("listFriendWish"+listFriendWish.getModel());
-        System.out.println("friendProducts" + friendProducts.size());
+        System.out.println("friendProducts" + friendProducts);
+        
         labelProdNameFI.setText(friendProducts.elementAt(itemIndex).getName()); 
         labelPriceFI.setText(Integer.toString(friendProducts.elementAt(itemIndex).getPrice()));
         textPaneProdDescFI.setText(friendProducts.elementAt(itemIndex).getDesc());
@@ -833,6 +870,7 @@ public class Client extends javax.swing.JFrame {
         DialogFriendItem.setLocation(XPOSITION, YPOSITION);
         DialogFriendItem.setSize(500, 500);
         DialogFriendItem.show();
+       }
     }//GEN-LAST:event_listFriendWishValueChanged
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed

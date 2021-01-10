@@ -17,6 +17,30 @@ import java.util.Vector;
 class ContrDetails{
     private String friendName, prodName;
     private int contrAmount;
+
+    public String getFriendName() {
+        return friendName;
+    }
+
+    public void setFriendName(String friendName) {
+        this.friendName = friendName;
+    }
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
+
+    public int getContrAmount() {
+        return contrAmount;
+    }
+
+    public void setContrAmount(int contrAmount) {
+        this.contrAmount = contrAmount;
+    }
     
 }
 class UserInfo {
@@ -25,9 +49,32 @@ class UserInfo {
     private String usrName, pw, email, fname, lname; // attribute of user
     private Vector <ProdInfo> wishList; // itemms of user
     private ContrDetails contribution; // obj containing friendname, prodname, contribution amount
+    private Vector <ProdInfo> availableProds;
     
     private Vector <String> pendFriends; // Pending friends of user
+    private Vector <String> aprvFriends;
 
+    public UserInfo() {
+    }
+
+    public UserInfo(UserInfo usrInfo) {
+        this.type = usrInfo.getType();
+        this.reptype = usrInfo.getReptype();
+        this.result = usrInfo.getResult();
+        this.usrName = usrInfo.getUsrName();
+        this.pw = usrInfo.getPw();
+        this.email = usrInfo.getEmail();
+        this.fname = usrInfo.getFname();
+        this.lname = usrInfo.getLname();
+        this.wishList = new Vector(usrInfo.getWishList());
+        this.contribution = usrInfo.getContribution();
+        this.availableProds = new Vector(usrInfo.getAvailableProds());
+        this.pendFriends = new Vector(usrInfo.getPendFriends());
+        this.aprvFriends = new Vector(usrInfo.getAprvFriends());
+        
+    }
+    
+    
     public String getResult() {
         return result;
     }
@@ -106,6 +153,30 @@ class UserInfo {
 
     public void setReptype(String reptype) {
         this.reptype = reptype;
+    }
+
+    public ContrDetails getContribution() {
+        return contribution;
+    }
+
+    public void setContribution(ContrDetails contribution) {
+        this.contribution = contribution;
+    }
+
+    public Vector <ProdInfo> getAvailableProds() {
+        return availableProds;
+    }
+
+    public void setAvailableProds(Vector <ProdInfo> availableProds) {
+        this.availableProds = availableProds;
+    }
+
+    public Vector <String> getAprvFriends() {
+        return aprvFriends;
+    }
+
+    public void setAprvFriends(Vector <String> aprvFriends) {
+        this.aprvFriends = aprvFriends;
     }
 }
 
