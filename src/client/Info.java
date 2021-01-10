@@ -15,16 +15,10 @@ import java.util.Vector;
  */
 
 class ContrDetails{
-    private String friendName, prodName;
+    private String prodName;
     private int contrAmount;
 
-    public String getFriendName() {
-        return friendName;
-    }
-
-    public void setFriendName(String friendName) {
-        this.friendName = friendName;
-    }
+    
 
     public String getProdName() {
         return prodName;
@@ -50,7 +44,7 @@ class UserInfo {
     private Vector <ProdInfo> wishList; // itemms of user
     private ContrDetails contribution; // obj containing friendname, prodname, contribution amount
     private Vector <ProdInfo> availableProds;
-    
+    private String friendName;
     private Vector <String> pendFriends; // Pending friends of user
     private Vector <String> aprvFriends;
 
@@ -74,7 +68,13 @@ class UserInfo {
         
     }
     
-    
+    public String getFriendName() {
+        return friendName;
+    }
+
+    public void setFriendName(String friendName) {
+        this.friendName = friendName;
+    }
     public String getResult() {
         return result;
     }
