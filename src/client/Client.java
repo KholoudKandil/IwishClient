@@ -20,6 +20,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 
 
@@ -119,8 +120,13 @@ public class Client extends javax.swing.JFrame {
                 break;
             case "fWish":
                 repfWishMsg(data);
+                break;
             case "rmFriend":
                 reprmFriend(data);
+                break;
+            case "friendRequest":
+                repFriendRequest(data);
+                break;
             default:
             // code block
         }
@@ -221,6 +227,16 @@ public class Client extends javax.swing.JFrame {
         }
     }
     
+    void repFriendRequest(UserInfo data){
+            if("success".equals(data.getResult())){
+                JOptionPane.showMessageDialog(this, "Request Sent Succfully");
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "User Doesn't exist");
+            }
+            
+    }
+    
         /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -288,7 +304,7 @@ public class Client extends javax.swing.JFrame {
         labelFriendWishList = new javax.swing.JLabel();
         btnRemoveFriend = new javax.swing.JButton();
         btnSendRequest = new javax.swing.JButton();
-        btnFriendEmail = new javax.swing.JTextField();
+        btnFriendName = new javax.swing.JTextField();
         labelNewFriend = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         panelMyWishList = new javax.swing.JPanel();
@@ -686,10 +702,15 @@ public class Client extends javax.swing.JFrame {
         });
 
         btnSendRequest.setText("Send Request");
-
-        btnFriendEmail.addActionListener(new java.awt.event.ActionListener() {
+        btnSendRequest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFriendEmailActionPerformed(evt);
+                btnSendRequestActionPerformed(evt);
+            }
+        });
+
+        btnFriendName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFriendNameActionPerformed(evt);
             }
         });
 
@@ -713,7 +734,7 @@ public class Client extends javax.swing.JFrame {
                             .addComponent(jButton2))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFriendsLayout.createSequentialGroup()
                             .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnFriendEmail, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnFriendName, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(scrollPanelFriends, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                                 .addComponent(labelFriendList, javax.swing.GroupLayout.Alignment.LEADING))
                             .addGap(107, 107, 107)
@@ -738,7 +759,7 @@ public class Client extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelNewFriend)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnFriendEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnFriendName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSendRequest)
@@ -758,11 +779,6 @@ public class Client extends javax.swing.JFrame {
 
         btnRemoveItem.setText("Remove ");
 
-        listMyWish.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(listMyWish);
 
         javax.swing.GroupLayout panelMyWishListLayout = new javax.swing.GroupLayout(panelMyWishList);
@@ -800,11 +816,6 @@ public class Client extends javax.swing.JFrame {
 
         mainPane.addTab("My Wishlist", panelMyWishList);
 
-        listFriendRequests.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         scrollPanelFriendRequests.setViewportView(listFriendRequests);
 
         javax.swing.GroupLayout panelFriendRequestsLayout = new javax.swing.GroupLayout(panelFriendRequests);
@@ -820,11 +831,6 @@ public class Client extends javax.swing.JFrame {
 
         mainPane.addTab("Friend Requests", panelFriendRequests);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(jList1);
 
         javax.swing.GroupLayout panelNotificationsLayout = new javax.swing.GroupLayout(panelNotifications);
@@ -1002,16 +1008,43 @@ public class Client extends javax.swing.JFrame {
     private void btnContributeFIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContributeFIActionPerformed
         // TODO add your handling code here:
         
-        
+    
     }//GEN-LAST:event_btnContributeFIActionPerformed
 
-    private void btnFriendEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFriendEmailActionPerformed
+    private void btnFriendNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFriendNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnFriendEmailActionPerformed
+    }//GEN-LAST:event_btnFriendNameActionPerformed
 
     private void txtRegFnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegFnameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRegFnameActionPerformed
+
+    private void btnSendRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendRequestActionPerformed
+        // TODO add your handling code here:
+        
+        // prepare obj for log
+        data = new UserInfo();
+        data.setUsrName(myInfo.getUsrName());
+        data.setType("friendRequest");
+        data.setFriendName(btnFriendName.getText().trim());
+        
+        // obj to json
+        String msg = new Gson().toJson(data);
+        
+        // send if server is on
+        if(serverIsOff == true) {
+            connClient();
+            if(serverIsOff == false) {
+                ps.println(msg);
+                ps.flush();
+                }
+        }
+        else {
+            System.out.println(msg);
+            ps.println(msg);
+            ps.flush();
+        }
+    }//GEN-LAST:event_btnSendRequestActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1059,7 +1092,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton btnAddAI;
     private javax.swing.JButton btnContributeFI;
     private javax.swing.JButton btnDecline;
-    private javax.swing.JTextField btnFriendEmail;
+    private javax.swing.JTextField btnFriendName;
     private javax.swing.JButton btnRemoveFriend;
     private javax.swing.JButton btnRemoveItem;
     private javax.swing.JButton btnSendRequest;
