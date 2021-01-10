@@ -465,43 +465,40 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
+                                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace pref="64" max="32767" attributes="0"/>
+                                          <Component id="txtRegFname" min="-2" pref="61" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="txtRegLname" min="-2" pref="61" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="txtRegUsr" min="-2" pref="61" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
                                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                                          <Component id="txtRegPw" min="-2" max="-2" attributes="0"/>
+                                          <Component id="txtRegPw" max="32767" attributes="0"/>
                                       </Group>
-                                      <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="txtRegEmail" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="txtRegUsr" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="txtRegFname" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="32767" attributes="0"/>
-                                              <Component id="txtRegLname" min="-2" max="-2" attributes="0"/>
-                                          </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="txtRegEmail" min="-2" pref="61" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
                               <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                      <Component id="clearBtn" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="createBtn" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="createBtn" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="181" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="clearBtn" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -534,39 +531,30 @@
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="createBtn" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="95" max="32767" attributes="0"/>
-                          <Component id="clearBtn" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="createBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="clearBtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="56" max="32767" attributes="0"/>
+                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="txtRegFname">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField1"/>
-                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtRegFnameActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtRegLname">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField2"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtRegUsr">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField3"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtRegEmail">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField4"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JPasswordField" name="txtRegPw">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jPasswordField1"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="createBtn">
                   <Properties>
@@ -607,6 +595,11 @@
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Password"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="jButton1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Login Now"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -650,18 +643,24 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btnRemoveFriend" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnSendRequest" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="labelNewFriend" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="btnFriendEmail" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="scrollPanelFriends" alignment="0" pref="113" max="32767" attributes="0"/>
-                                      <Component id="labelFriendList" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="btnSendRequest" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="labelFriendWishList" min="-2" max="-2" attributes="0"/>
-                                      <Component id="scrollPanelFriendWish" min="-2" pref="147" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="btnFriendEmail" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="scrollPanelFriends" alignment="0" pref="113" max="32767" attributes="0"/>
+                                          <Component id="labelFriendList" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="labelFriendWishList" min="-2" max="-2" attributes="0"/>
+                                          <Component id="scrollPanelFriendWish" min="-2" pref="147" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                           </Group>
@@ -684,12 +683,15 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnRemoveFriend" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="13" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="labelNewFriend" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnFriendEmail" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnSendRequest" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btnSendRequest" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -706,13 +708,7 @@
                     <Component class="javax.swing.JList" name="listFriends">
                       <Properties>
                         <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                          <StringArray count="5">
-                            <StringItem index="0" value="sara"/>
-                            <StringItem index="1" value="mai"/>
-                            <StringItem index="2" value="alice"/>
-                            <StringItem index="3" value="kholoud"/>
-                            <StringItem index="4" value="mostafa"/>
-                          </StringArray>
+                          <StringArray count="0"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -767,13 +763,18 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="btnFriendEmail">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="jTextField1"/>
-                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFriendEmailActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="labelNewFriend">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add new friend"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="jButton2">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Log out"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -793,11 +794,11 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="scrollPanelMyWish" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
                               <Component id="labelMyWish" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="btnRemoveItem" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jScrollPane2" min="-2" pref="89" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="labelAvailableItems" min="-2" max="-2" attributes="0"/>
                               <Component id="scrollPanelAvailableItems" min="-2" pref="143" max="-2" attributes="0"/>
@@ -817,41 +818,18 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="scrollPanelMyWish" min="-2" pref="106" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane2" min="-2" pref="143" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="btnRemoveItem" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="scrollPanelAvailableItems" min="-2" pref="252" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="71" max="32767" attributes="0"/>
+                          <EmptySpace pref="64" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="scrollPanelMyWish">
-                  <AuxValues>
-                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                  </AuxValues>
-
-                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JList" name="listMyWish">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                          <StringArray count="3">
-                            <StringItem index="0" value="item 1"/>
-                            <StringItem index="1" value="item 2"/>
-                            <StringItem index="2" value="item 3"/>
-                          </StringArray>
-                        </Property>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-                      </AuxValues>
-                    </Component>
-                  </SubComponents>
-                </Container>
                 <Component class="javax.swing.JLabel" name="labelMyWish">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="My Wish List"/>
@@ -886,6 +864,31 @@
                     <Property name="text" type="java.lang.String" value="Remove "/>
                   </Properties>
                 </Component>
+                <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JList" name="listMyWish">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+                          <StringArray count="5">
+                            <StringItem index="0" value="Item 1"/>
+                            <StringItem index="1" value="Item 2"/>
+                            <StringItem index="2" value="Item 3"/>
+                            <StringItem index="3" value="Item 4"/>
+                            <StringItem index="4" value="Item 5"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="panelFriendRequests">
@@ -905,7 +908,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="scrollPanelFriendRequests" alignment="0" pref="359" max="32767" attributes="0"/>
+                      <Component id="scrollPanelFriendRequests" alignment="0" pref="352" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -954,7 +957,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="359" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="0" pref="352" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
