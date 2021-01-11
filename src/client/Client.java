@@ -5,9 +5,8 @@ package client;
 // stupid comment number 3
 //b7bkooo 5 mwaah
 //stupid comment number  4
-import com.google.gson.Gson;
-import java.awt.CardLayout;
-import java.awt.Dimension;
+// edit no 5
+
 import java.awt.Toolkit;
 import java.io.DataInputStream;
 import java.io.IOException;
