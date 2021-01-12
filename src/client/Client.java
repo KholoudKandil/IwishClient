@@ -49,6 +49,7 @@ public class Client extends javax.swing.JFrame {
     boolean serverIsOff = false; // server status
     boolean wishListFire= false; // wishlist integraty flag
     Vector <ProdInfo> friendProducts;
+    Vector friendRequests;
     
     String reply;
     UserInfo myInfo;
@@ -128,6 +129,9 @@ public class Client extends javax.swing.JFrame {
             case "friendRequest":
                 repFriendRequest(data);
                 break;
+            case "FDialogfriendRequest":
+                dialFUNFriendRequest(data);
+                break;
             default:
             // code block
         }
@@ -148,10 +152,10 @@ public class Client extends javax.swing.JFrame {
             System.out.println(prod.getName());
             
             }
-            System.out.println(myWishList);
+            //System.out.println(myWishList);
             listMyWish.setModel(myWishList);
             
-            System.out.println(listMyWish.getModel());
+            
             temp.clear();
             //filling available products
             DefaultListModel availableProdsList = new DefaultListModel<>();
@@ -169,22 +173,26 @@ public class Client extends javax.swing.JFrame {
             //temp.clear();
             
             //filling user's friend requests
-            
-            ////////////////////////////////////////////////////////
-            DefaultListModel friendWishList = new DefaultListModel<>();
-            Vector friendRequests = myInfo.getPendFriends();
+
+            DefaultListModel myFriendRequests = new DefaultListModel<>();
+            friendRequests = myInfo.getPendFriends();
             System.out.print(friendRequests);
             for (Object user : friendRequests){
-            friendWishList.addElement(user + " send you friend request");
-            // DefaultListModel temp = new DefaultListModel<>();
-            //
-            // temp.addElement(data.getPendFriends());
-            // listFriendRequests.setModel(temp);
-            //temp.clear();
+            myFriendRequests.addElement(user + " send you friend request");
             }
-            listFriendRequests.setModel(friendWishList);
-
+            listFriendRequests.setModel(myFriendRequests);
+            // Fill notification list
+            
+            DefaultListModel notificationList = new DefaultListModel<>();
+            for(ProdInfo prod : myInfo.getCompletedProds()){
+            notificationList.addElement("CONGRATULATIONS!!  Your Friends Got a " +prod.getName());
+            System.out.println( "Product name " +prod.getName());
+            
+            }
+            listNotification.setModel(notificationList);
+            
             cl.next(basePane);
+        
         } else {
             System.out.println("Wrong user name or password"); // give dialog box as wrong usr or pw
         }
@@ -194,6 +202,7 @@ public class Client extends javax.swing.JFrame {
         if (data.getResult().equals("success")) { // move to next panel
             System.out.println("success");
         } else {
+            JOptionPane.showMessageDialog(this, "User Already Created");
             System.out.println("Error occure, please try again"); // error
         }
     }
@@ -216,7 +225,7 @@ public class Client extends javax.swing.JFrame {
     
     void reprmFriend(UserInfo data){
         if(data.getResult()== "success"){
-        
+            
             myInfo.getAprvFriends().removeElement(data.getFriendName());
             DefaultListModel temp = new DefaultListModel();
             
@@ -225,7 +234,9 @@ public class Client extends javax.swing.JFrame {
             }
             System.out.println(myInfo);
             listFriends.setModel(temp);
+            
         }
+        
     }
     
     void repFriendRequest(UserInfo data){
@@ -236,6 +247,14 @@ public class Client extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "User Doesn't exist");
             }
             
+    }
+    void dialFUNFriendRequest(UserInfo data){
+            if("success".equals(data.getResult())&&data.getFlagFriendReq()==true){
+                JOptionPane.showMessageDialog(this, "Friend Added Succfully");
+            }
+            else if("success".equals(data.getResult())&&data.getFlagFriendReq()==false){
+                JOptionPane.showMessageDialog(this, "Friend's Request Decline");
+            }
     }
     
         /**
@@ -321,7 +340,7 @@ public class Client extends javax.swing.JFrame {
         listFriendRequests = new javax.swing.JList<>();
         panelNotifications = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listNotification = new javax.swing.JList<>();
 
         labelProdNameFI.setText("<product name>");
 
@@ -451,17 +470,15 @@ public class Client extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(scrollPaneProdDescMI, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 172, Short.MAX_VALUE))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(labelProdNameMI)
                         .addGap(93, 93, 93)
                         .addComponent(labelPriceMI)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(71, 71, 71)
-                .addComponent(progBarMoney, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap(185, Short.MAX_VALUE))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(scrollPaneProdDescMI, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                            .addComponent(progBarMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -473,8 +490,8 @@ public class Client extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(scrollPaneProdDescMI, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addGap(27, 27, 27)
-                .addComponent(progBarMoney, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addComponent(progBarMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout DialogMyItemLayout = new javax.swing.GroupLayout(DialogMyItem.getContentPane());
@@ -491,8 +508,18 @@ public class Client extends javax.swing.JFrame {
         labelRequest.setText("<Folan> Wants to be your friend");
 
         btnAccept.setText("Accept");
+        btnAccept.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAcceptActionPerformed(evt);
+            }
+        });
 
         btnDecline.setText("Decline");
+        btnDecline.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeclineActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout DialogFriendRequestLayout = new javax.swing.GroupLayout(DialogFriendRequest.getContentPane());
         DialogFriendRequest.getContentPane().setLayout(DialogFriendRequestLayout);
@@ -742,7 +769,7 @@ public class Client extends javax.swing.JFrame {
                             .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(labelFriendWishList)
                                 .addComponent(scrollPanelFriendWish, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         panelFriendsLayout.setVerticalGroup(
             panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -796,7 +823,7 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelAvailableItems)
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         panelMyWishListLayout.setVerticalGroup(
             panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -817,13 +844,18 @@ public class Client extends javax.swing.JFrame {
 
         mainPane.addTab("My Wishlist", panelMyWishList);
 
+        listFriendRequests.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listFriendRequestsValueChanged(evt);
+            }
+        });
         scrollPanelFriendRequests.setViewportView(listFriendRequests);
 
         javax.swing.GroupLayout panelFriendRequestsLayout = new javax.swing.GroupLayout(panelFriendRequests);
         panelFriendRequests.setLayout(panelFriendRequestsLayout);
         panelFriendRequestsLayout.setHorizontalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
         );
         panelFriendRequestsLayout.setVerticalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -832,13 +864,13 @@ public class Client extends javax.swing.JFrame {
 
         mainPane.addTab("Friend Requests", panelFriendRequests);
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(listNotification);
 
         javax.swing.GroupLayout panelNotificationsLayout = new javax.swing.GroupLayout(panelNotifications);
         panelNotifications.setLayout(panelNotificationsLayout);
         panelNotificationsLayout.setHorizontalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
         );
         panelNotificationsLayout.setVerticalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1047,6 +1079,73 @@ public class Client extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSendRequestActionPerformed
 
+    private void listFriendRequestsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendRequestsValueChanged
+        // TODO add your handling code here:
+        
+        String freqName = listFriendRequests.getSelectedValue();
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int XPOSITION = (screenSize.width - DialogFriendRequest.getWidth())/4 ;
+        final int YPOSITION  = (screenSize.height - DialogFriendRequest.getHeight())/4 ;
+        
+        
+       int itemIndex = listFriendRequests.getSelectedIndex();
+        data.setFriendName((String) friendRequests.elementAt(itemIndex));
+        //System.out.println(data.getfriendreq());
+        labelRequest.setText((String) friendRequests.elementAt(itemIndex)+"  Wants to be your friend"); 
+        
+        DialogFriendRequest.setLocation(XPOSITION, YPOSITION);
+        DialogFriendRequest.setSize(500, 500);
+        DialogFriendRequest.show();
+    }//GEN-LAST:event_listFriendRequestsValueChanged
+
+    private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+        // TODO add your handling code here:
+        data.setFlagFriendReq(true);
+        data.setType("FDialogfriendRequest");
+        
+        
+        // obj to json
+        String msg = new Gson().toJson(data);
+        
+        // send if server is on
+        if(serverIsOff == true) {
+            connClient();
+            if(serverIsOff == false) {
+                ps.println(msg);
+                ps.flush();
+                }
+        }
+        else {
+            System.out.println(msg);
+            ps.println(msg);
+            ps.flush();
+        }
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
+    private void btnDeclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeclineActionPerformed
+        // TODO add your handling code here:
+        data.setFlagFriendReq(false);
+        data.setType("FDialogfriendRequest");
+        
+        // obj to json
+        String msg = new Gson().toJson(data);
+        
+        // send if server is on
+        if(serverIsOff == true) {
+            connClient();
+            if(serverIsOff == false) {
+                ps.println(msg);
+                ps.flush();
+                }
+        }
+        else {
+            System.out.println(msg);
+            ps.println(msg);
+            ps.flush();
+        }
+    }//GEN-LAST:event_btnDeclineActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1106,7 +1205,6 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
@@ -1129,6 +1227,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JList<String> listFriendWish;
     private javax.swing.JList<String> listFriends;
     private javax.swing.JList<String> listMyWish;
+    private javax.swing.JList<String> listNotification;
     private javax.swing.JButton loginBtn;
     private javax.swing.JTabbedPane loginRegsPane;
     private javax.swing.JPanel loginTab;
