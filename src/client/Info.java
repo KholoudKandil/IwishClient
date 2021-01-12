@@ -17,6 +17,7 @@ import java.util.Vector;
 class ContrDetails{
     private String prodName;
     private int contrAmount;
+    private int actualAmount;
 
     
 
@@ -43,10 +44,15 @@ class UserInfo {
     private String usrName, pw, email, fname, lname; // attribute of user
     private Vector <ProdInfo> wishList; // itemms of user
     private ContrDetails contribution; // obj containing friendname, prodname, contribution amount
-    private Vector <ProdInfo> availableProds;
-    private String friendName;
+    private Vector <ProdInfo> availableProds; // a vector of the available products in the database
+    private Vector <ProdInfo> completedProds; //  a vector of gifts that have been fullfilled
+    private String friendName; // The name of the friend that user wants to add or remove
     private Vector <String> pendFriends; // Pending friends of user
-    private Vector <String> aprvFriends;
+    private Vector <String> aprvFriends; //  a vector of user's friends
+    private float credit; // user's credit or wallet
+    
+    private boolean FlagFriendReq;
+    
 
     public UserInfo() {
     }
@@ -65,7 +71,18 @@ class UserInfo {
         this.availableProds = new Vector(usrInfo.getAvailableProds());
         this.pendFriends = new Vector(usrInfo.getPendFriends());
         this.aprvFriends = new Vector(usrInfo.getAprvFriends());
+        this.completedProds = new Vector(usrInfo.getCompletedProds());
+        this.usrName = usrInfo.getFriendName();
+        this.credit = usrInfo.getCredit();
         
+        this.FlagFriendReq=usrInfo.getFlagFriendReq();
+        
+    }
+     public boolean getFlagFriendReq() {
+        return  FlagFriendReq;
+     }
+    public void setFlagFriendReq(boolean FFriendReq) {
+         FlagFriendReq=FFriendReq;
     }
     
     public String getFriendName() {
@@ -177,6 +194,22 @@ class UserInfo {
 
     public void setAprvFriends(Vector <String> aprvFriends) {
         this.aprvFriends = aprvFriends;
+    }
+
+    public Vector <ProdInfo> getCompletedProds() {
+        return completedProds;
+    }
+
+    public void setCompletedProds(Vector <ProdInfo> completedProds) {
+        this.completedProds = completedProds;
+    }
+
+    public float getCredit() {
+        return credit;
+    }
+
+    public void setCredit(float credit) {
+        this.credit = credit;
     }
 }
 
