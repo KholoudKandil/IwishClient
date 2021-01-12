@@ -132,6 +132,9 @@ public class Client extends javax.swing.JFrame {
             case "FDialogfriendRequest":
                 dialFUNFriendRequest(data);
                 break;
+            case "contribute":
+                repContribute(data);
+                break;
             default:
             // code block
         }
@@ -142,7 +145,25 @@ public class Client extends javax.swing.JFrame {
             System.out.println("success");
             //System.out.println(data);
             myInfo = new UserInfo(data);
-            
+            myInfo.setType(data.getType());
+            myInfo.setUsrName(data.getUsrName());
+            myInfo.setWishList(new Vector(data.getWishList()));
+            myInfo.setAvailableProds(new Vector(data.getAvailableProds()));
+            myInfo.setPendFriends(new Vector(data.getPendFriends()));
+            myInfo.setContribution(data.getContribution());
+            myInfo.setAprvFriends(new Vector(data.getAprvFriends()));
+            myInfo.setCompletedProds(new Vector(data.getCompletedProds()));
+            myInfo.setFriendName(data.getFriendName());
+            myInfo.setCredit(data.getCredit());
+            myInfo.setFlagFriendReq(data.getFlagFriendReq());
+/*
+        this.email = usrInfo.getEmail();
+        this.fname = usrInfo.getFname();
+        this.lname = usrInfo.getLname();
+*/
+
+            System.out.println("My UsrName data  "+data.getUsrName());
+            System.out.println("My UsrName myInfo  "+myInfo.getUsrName());
             DefaultListModel temp = new DefaultListModel<>();
             
             //filling my wishlist
@@ -190,6 +211,11 @@ public class Client extends javax.swing.JFrame {
             
             }
             listNotification.setModel(notificationList);
+            
+            // add credit
+            myInfo.setCredit(data.getCredit());
+            labelCredit.setText(Integer.toString(myInfo.getCredit()));
+            
             
             cl.next(basePane);
         
@@ -257,6 +283,17 @@ public class Client extends javax.swing.JFrame {
             }
     }
     
+    void repContribute(UserInfo data) {
+        if ("success".equals(data.getResult())) {
+            JOptionPane.showMessageDialog(this, "you contributed successfully");
+            txtContributionAmountFI.setText("");
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "your contribution failed");
+            
+        }
+    }
+    
         /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -274,6 +311,8 @@ public class Client extends javax.swing.JFrame {
         scrollPaneProdDescFI = new javax.swing.JScrollPane();
         textPaneProdDescFI = new javax.swing.JTextPane();
         labelPriceFI = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        labelCredit = new javax.swing.JLabel();
         DialogAvailableItem = new javax.swing.JDialog();
         jPanel7 = new javax.swing.JPanel();
         labelProdNameAI = new javax.swing.JLabel();
@@ -355,6 +394,8 @@ public class Client extends javax.swing.JFrame {
 
         labelPriceFI.setText("<price>");
 
+        jLabel6.setText("Your Credit Limit is  ");
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -362,9 +403,6 @@ public class Client extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(txtContributionAmountFI)
                         .addGap(18, 18, 18)
@@ -374,7 +412,15 @@ public class Client extends javax.swing.JFrame {
                         .addComponent(labelProdNameFI)
                         .addGap(93, 93, 93)
                         .addComponent(labelPriceFI)
-                        .addContainerGap(185, Short.MAX_VALUE))))
+                        .addContainerGap(185, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelCredit))
+                            .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -385,7 +431,11 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(labelPriceFI))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(labelCredit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnContributeFI)
                     .addComponent(txtContributionAmountFI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -769,7 +819,7 @@ public class Client extends javax.swing.JFrame {
                             .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(labelFriendWishList)
                                 .addComponent(scrollPanelFriendWish, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelFriendsLayout.setVerticalGroup(
             panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -823,7 +873,7 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelAvailableItems)
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelMyWishListLayout.setVerticalGroup(
             panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -839,7 +889,7 @@ public class Client extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRemoveItem))
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         mainPane.addTab("My Wishlist", panelMyWishList);
@@ -855,11 +905,11 @@ public class Client extends javax.swing.JFrame {
         panelFriendRequests.setLayout(panelFriendRequestsLayout);
         panelFriendRequestsLayout.setHorizontalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
         );
         panelFriendRequestsLayout.setVerticalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Friend Requests", panelFriendRequests);
@@ -870,11 +920,11 @@ public class Client extends javax.swing.JFrame {
         panelNotifications.setLayout(panelNotificationsLayout);
         panelNotificationsLayout.setHorizontalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
         );
         panelNotificationsLayout.setVerticalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Gifts Notifications", panelNotifications);
@@ -1040,7 +1090,40 @@ public class Client extends javax.swing.JFrame {
 
     private void btnContributeFIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContributeFIActionPerformed
         // TODO add your handling code here:
-        
+        int credit = Integer.parseInt(labelCredit.getText().trim());
+
+        int Amountcontribute = Integer.parseInt(txtContributionAmountFI.getText().trim());
+        if (Amountcontribute < credit) {
+            data.setType("contribute");
+            System.out.println(myInfo.getUsrName());
+            data.setUsrName(myInfo.getUsrName());
+
+            ContrDetails contribution = new ContrDetails();
+
+            contribution.setContrAmount(Amountcontribute);
+            contribution.setProdName(labelProdNameFI.getText());
+            contribution.setFriendName(listFriends.getSelectedValue());
+            data.setContribution(contribution);
+            System.out.println(data.getContribution().getFriendName());
+
+            // obj to json
+            String msg = new Gson().toJson(data);
+
+            // send if server is on
+            if (serverIsOff == true) {
+                connClient();
+                if (serverIsOff == false) {
+                    ps.println(msg);
+                    ps.flush();
+                }
+            } else {
+                System.out.println(msg);
+                ps.println(msg);
+                ps.flush();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "you don't have enough credit", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     
     }//GEN-LAST:event_btnContributeFIActionPerformed
 
@@ -1205,12 +1288,14 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelAvailableItems;
+    private javax.swing.JLabel labelCredit;
     private javax.swing.JLabel labelFriendList;
     private javax.swing.JLabel labelFriendWishList;
     private javax.swing.JLabel labelMyWish;
