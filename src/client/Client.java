@@ -76,17 +76,24 @@ public class Client extends javax.swing.JFrame {
                     while (true) {
                         try {
                             String msg = dis.readLine();
-                            reply = msg;
+                            //reply = msg;
                             if (msg != null) {
                                 // data = new Gson().fromJson(msg, UserInfo.class);
                                 System.out.println(msg);
                                 handleRepMsg(msg);
                             }
+                            else {
+                                servSock.close();
+                                dis.close();
+                                ps.close();
+                                serverIsOff = true;
+                                break;
+                            }
                         } catch (SocketException e) {
                             try {
                                 dis.close();
                                 ps.close();
-                                //servSock.close();
+                                servSock.close();
                                 serverIsOff = true;
                                 if (th != null) {
                                     th.stop();
@@ -144,7 +151,7 @@ public class Client extends javax.swing.JFrame {
         if (data.getResult().equals("success")) { // move to next panel
             System.out.println("success");
             //System.out.println(data);
-            myInfo = new UserInfo(data);
+            //myInfo = new UserInfo(data);
             myInfo.setType(data.getType());
             myInfo.setUsrName(data.getUsrName());
             myInfo.setWishList(new Vector(data.getWishList()));
@@ -601,6 +608,7 @@ public class Client extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
 
+        basePane.setMinimumSize(new java.awt.Dimension(100, 100));
         basePane.setLayout(new java.awt.CardLayout());
 
         txtLogUsr.setText("jTextField1");
@@ -819,7 +827,7 @@ public class Client extends javax.swing.JFrame {
                             .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(labelFriendWishList)
                                 .addComponent(scrollPanelFriendWish, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         panelFriendsLayout.setVerticalGroup(
             panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -873,7 +881,7 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelAvailableItems)
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
         panelMyWishListLayout.setVerticalGroup(
             panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -889,7 +897,7 @@ public class Client extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRemoveItem))
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         mainPane.addTab("My Wishlist", panelMyWishList);
@@ -905,11 +913,11 @@ public class Client extends javax.swing.JFrame {
         panelFriendRequests.setLayout(panelFriendRequestsLayout);
         panelFriendRequestsLayout.setHorizontalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
         );
         panelFriendRequestsLayout.setVerticalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Friend Requests", panelFriendRequests);
@@ -920,11 +928,11 @@ public class Client extends javax.swing.JFrame {
         panelNotifications.setLayout(panelNotificationsLayout);
         panelNotificationsLayout.setHorizontalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
         );
         panelNotificationsLayout.setVerticalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Gifts Notifications", panelNotifications);
