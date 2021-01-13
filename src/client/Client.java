@@ -307,6 +307,7 @@ public class Client extends javax.swing.JFrame {
     void dialFUNFriendRequest(UserInfo data){
             if("success".equals(data.getResult())&&data.getFlagFriendReq()==true){
                 JOptionPane.showMessageDialog(this, "Friend Added Succfully");
+                
             }
             else if("success".equals(data.getResult())&&data.getFlagFriendReq()==false){
                 JOptionPane.showMessageDialog(this, "Friend's Request Decline");
@@ -377,7 +378,7 @@ public class Client extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Item Added Succfully");
             }
         } else {
-            JOptionPane.showMessageDialog(this,"please try again"); // error
+            JOptionPane.showMessageDialog(this,"Can't choose this item"); // error
         }
     }
     
@@ -1210,7 +1211,7 @@ public class Client extends javax.swing.JFrame {
         System.out.println(friendProducts.elementAt(itemIndex).getName());
         
         DialogFriendItem.setLocation(XPOSITION, YPOSITION);
-        DialogFriendItem.setSize(500, 500);
+        DialogFriendItem.setSize(300, 300);
         DialogFriendItem.show();
        }
     }//GEN-LAST:event_listFriendWishValueChanged
@@ -1259,25 +1260,33 @@ public class Client extends javax.swing.JFrame {
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
         // TODO add your handling code here:
         // prepare obj for reg
-        data = new UserInfo();
-        data.setType("reg");
-        data.setUsrName(txtRegUsr.getText().trim());
-        data.setPw(txtRegPw.getText().trim());
-        data.setEmail(txtRegEmail.getText().trim());
-        data.setFname(txtRegFname.getText().trim());
-        data.setLname(txtRegLname.getText().trim());
-        // obj to json
-        String msg = new Gson().toJson(data);
-        // send if server is on
-        if (serverIsOff == true) {
-            connClient();
-            if (serverIsOff == false) {
+        if(txtRegUsr.getText().isEmpty()==true||txtRegPw.getText().isEmpty()==true||txtRegEmail.getText().isEmpty()==true||
+               txtRegFname.getText().isEmpty()==true|| txtRegLname.getText().isEmpty()==true)
+        {
+            JOptionPane.showMessageDialog(this, "Please Enter Correct Value");
+        }
+        else
+        {
+            data = new UserInfo();
+            data.setUsrName(txtRegUsr.getText().trim());
+            data.setPw(txtRegPw.getText().trim());
+            data.setEmail(txtRegEmail.getText().trim());
+            data.setFname(txtRegFname.getText().trim());
+            data.setLname(txtRegLname.getText().trim());
+            data.setType("reg");
+            // obj to json
+            String msg = new Gson().toJson(data);
+            // send if server is on
+            if (serverIsOff == true) {
+                connClient();
+                if (serverIsOff == false) {
+                    ps.println(msg);
+                    ps.flush();
+                }
+            } else {
                 ps.println(msg);
                 ps.flush();
             }
-        } else {
-            ps.println(msg);
-            ps.flush();
         }
     }//GEN-LAST:event_createBtnActionPerformed
 
@@ -1371,7 +1380,7 @@ public class Client extends javax.swing.JFrame {
         labelRequest.setText((String) friendRequests.elementAt(itemIndex)+"  Wants to be your friend"); 
         
         DialogFriendRequest.setLocation(XPOSITION, YPOSITION);
-        DialogFriendRequest.setSize(500, 500);
+        DialogFriendRequest.setSize(300, 300);
         DialogFriendRequest.show();
     }//GEN-LAST:event_listFriendRequestsValueChanged
 
@@ -1453,24 +1462,24 @@ public class Client extends javax.swing.JFrame {
 
     private void listAvailableItemsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listAvailableItemsValueChanged
         // TODO add your handling code here:
-        String freqName = listAvailableItems.getSelectedValue();
+        //String freqName = listAvailableItems.getSelectedValue();
         
         availableItemIndex = listAvailableItems.getSelectedIndex();
          
         if(myInfo.getAvailableProds().elementAt(availableItemIndex).getQty()==0)
         {
-            JOptionPane.showMessageDialog(this, "This Item Out Of Stock");
+            JOptionPane.showMessageDialog(this, "This Item is Out Of Stock");
         }else
         {
-            labelProdNameAI.setText((String) data.getAvailableProds().elementAt(availableItemIndex).getName()); 
-            labelPriceAI.setText(Integer.toString(data.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
-            textPaneProdDescAI.setText((String) data.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
+            labelProdNameAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getName()); 
+            labelPriceAI.setText(Integer.toString(myInfo.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
+            textPaneProdDescAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
             final Toolkit toolkit = Toolkit.getDefaultToolkit();
             final Dimension screenSize = toolkit.getScreenSize();
             final int XPOSITION = (screenSize.width - DialogAvailableItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogAvailableItem.getHeight())/4 ;
             DialogAvailableItem.setLocation(XPOSITION, YPOSITION);
-            DialogAvailableItem.setSize(500, 500);
+            DialogAvailableItem.setSize(300, 300);
             DialogAvailableItem.show();
         }
     }//GEN-LAST:event_listAvailableItemsValueChanged
@@ -1493,7 +1502,7 @@ public class Client extends javax.swing.JFrame {
             final int XPOSITION = (screenSize.width - DialogMyItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogMyItem.getHeight())/4 ;
             DialogMyItem.setLocation(XPOSITION, YPOSITION);
-            DialogMyItem.setSize(500, 500);
+            DialogMyItem.setSize(300, 300);
             DialogMyItem.show();
         }
         
