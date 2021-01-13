@@ -280,23 +280,34 @@ public class Client extends javax.swing.JFrame {
             
             DefaultListModel temp2 = new DefaultListModel();
             listFriendWish.setModel(temp2);
-
+            labelFriendWishList.setText("");
+        }
+        else{
+        JOptionPane.showMessageDialog(this, "Failed to remove friend");
         }
         
     }
     
     void repFriendRequest(UserInfo data){
             if("success".equals(data.getResult())){
-                JOptionPane.showMessageDialog(this, "Request Sent Succfully");
+                JOptionPane.showMessageDialog(this, "Request Sent Successfuly");
             }
-            else{
+            // Unique constratiant error code is "1"
+            else if("1".equals(data.getResult())){
+                JOptionPane.showMessageDialog(this, "Request Already Sent");
+            }
+            // Null constratiant error code is "1400"
+            else if("1400".equals(data.getResult())){
                 JOptionPane.showMessageDialog(this, "User Doesn't exist");
             }
-            
+             else {
+                JOptionPane.showMessageDialog(this, "Process failed");
+            }
     }
     void dialFUNFriendRequest(UserInfo data){
             if("success".equals(data.getResult())&&data.getFlagFriendReq()==true){
                 JOptionPane.showMessageDialog(this, "Friend Added Succfully");
+                
             }
             else if("success".equals(data.getResult())&&data.getFlagFriendReq()==false){
                 JOptionPane.showMessageDialog(this, "Friend's Request Decline");
@@ -305,18 +316,44 @@ public class Client extends javax.swing.JFrame {
     
     void repContribute(UserInfo data) {
         if ("success".equals(data.getResult())) {
-            JOptionPane.showMessageDialog(this, "you contributed successfully");
-            txtContributionAmountFI.setText("");
+            int contributamount = Integer.parseInt(txtContributionAmountFI.getText().trim());
+            int actual = data.getContribution().getActualAmount();
             
+            System.out.print(actual);
+            
+            System.out.print(contributamount);
+            
+            if (actual == contributamount) {
+                JOptionPane.showMessageDialog(this, "you contributed successfully ");
+                txtContributionAmountFI.setText("");
+                labelCredit.setText(Integer.toString(data.getCredit()));
+            } else {
+                JOptionPane.showMessageDialog(this, "you actually contributed with " + actual + " and your gift completed");
+
+                txtContributionAmountFI.setText("");
+                labelCredit.setText(Integer.toString(data.getCredit()));
+            }
+
         } else {
             JOptionPane.showMessageDialog(this, "your contribution failed");
-            
+
         }
     }
     
     void FunRemoveItem(UserInfo data){
             if("success".equals(data.getResult())){
-                JOptionPane.showMessageDialog(this, "Item Removed Succfully");
+            myInfo.getWishList().removeElementAt(listMyWishIndex);
+
+            System.out.println(myInfo.getWishList());
+            
+            DefaultListModel temp = new DefaultListModel();
+            
+            for(ProdInfo prod : myInfo.getWishList()){
+                temp.addElement(prod.getName());
+            }
+            //System.out.println(myInfo);
+            listMyWish.setModel(temp);
+            JOptionPane.showMessageDialog(this, "Item Removed Succfully");
             }
             else{
                 JOptionPane.showMessageDialog(this, "please try again");
@@ -325,9 +362,23 @@ public class Client extends javax.swing.JFrame {
     void FunAvailableItem(UserInfo data) {
         if (data.getResult().equals("success")) { 
             
-            JOptionPane.showMessageDialog(this,"Item Added Succfully");
+            if("success".equals(data.getResult())){
+            myInfo.getWishList().addElement(data.getNewProd());
+           //(listMyWishIndex);
+            
+            System.out.println(myInfo.getWishList());
+            
+            DefaultListModel temp = new DefaultListModel();
+            
+            for(ProdInfo prod : myInfo.getWishList()){
+                temp.addElement(prod.getName());
+            }
+            //System.out.println(myInfo);
+            listMyWish.setModel(temp);
+            JOptionPane.showMessageDialog(this, "Item Added Succfully");
+            }
         } else {
-            JOptionPane.showMessageDialog(this,"please try again"); // error
+            JOptionPane.showMessageDialog(this,"Can't choose this item"); // error
         }
     }
     
@@ -863,17 +914,16 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnRemoveFriend)
                     .addComponent(labelNewFriend)
-                    .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnSendRequest, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFriendsLayout.createSequentialGroup()
-                            .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnFriendName, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(scrollPanelFriends, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                                .addComponent(labelFriendList, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addGap(107, 107, 107)
-                            .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(labelFriendWishList)
-                                .addComponent(scrollPanelFriendWish, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(btnSendRequest)
+                    .addGroup(panelFriendsLayout.createSequentialGroup()
+                        .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnFriendName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(scrollPanelFriends, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                            .addComponent(labelFriendList, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(107, 107, 107)
+                        .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelFriendWishList)
+                            .addComponent(scrollPanelFriendWish, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         panelFriendsLayout.setVerticalGroup(
@@ -1024,7 +1074,7 @@ public class Client extends javax.swing.JFrame {
 
         txtCreditProfile.setEditable(false);
 
-        jButton2.setText("jButton2");
+        jButton2.setText("Add credit");
 
         javax.swing.GroupLayout panelProfileLayout = new javax.swing.GroupLayout(panelProfile);
         panelProfile.setLayout(panelProfileLayout);
@@ -1161,7 +1211,7 @@ public class Client extends javax.swing.JFrame {
         System.out.println(friendProducts.elementAt(itemIndex).getName());
         
         DialogFriendItem.setLocation(XPOSITION, YPOSITION);
-        DialogFriendItem.setSize(500, 500);
+        DialogFriendItem.setSize(300, 300);
         DialogFriendItem.show();
        }
     }//GEN-LAST:event_listFriendWishValueChanged
@@ -1210,25 +1260,33 @@ public class Client extends javax.swing.JFrame {
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
         // TODO add your handling code here:
         // prepare obj for reg
-        data = new UserInfo();
-        data.setType("reg");
-        data.setUsrName(txtRegUsr.getText().trim());
-        data.setPw(txtRegPw.getText().trim());
-        data.setEmail(txtRegEmail.getText().trim());
-        data.setFname(txtRegFname.getText().trim());
-        data.setLname(txtRegLname.getText().trim());
-        // obj to json
-        String msg = new Gson().toJson(data);
-        // send if server is on
-        if (serverIsOff == true) {
-            connClient();
-            if (serverIsOff == false) {
+        if(txtRegUsr.getText().isEmpty()==true||txtRegPw.getText().isEmpty()==true||txtRegEmail.getText().isEmpty()==true||
+               txtRegFname.getText().isEmpty()==true|| txtRegLname.getText().isEmpty()==true)
+        {
+            JOptionPane.showMessageDialog(this, "Please Enter Correct Value");
+        }
+        else
+        {
+            data = new UserInfo();
+            data.setUsrName(txtRegUsr.getText().trim());
+            data.setPw(txtRegPw.getText().trim());
+            data.setEmail(txtRegEmail.getText().trim());
+            data.setFname(txtRegFname.getText().trim());
+            data.setLname(txtRegLname.getText().trim());
+            data.setType("reg");
+            // obj to json
+            String msg = new Gson().toJson(data);
+            // send if server is on
+            if (serverIsOff == true) {
+                connClient();
+                if (serverIsOff == false) {
+                    ps.println(msg);
+                    ps.flush();
+                }
+            } else {
                 ps.println(msg);
                 ps.flush();
             }
-        } else {
-            ps.println(msg);
-            ps.flush();
         }
     }//GEN-LAST:event_createBtnActionPerformed
 
@@ -1322,7 +1380,7 @@ public class Client extends javax.swing.JFrame {
         labelRequest.setText((String) friendRequests.elementAt(itemIndex)+"  Wants to be your friend"); 
         
         DialogFriendRequest.setLocation(XPOSITION, YPOSITION);
-        DialogFriendRequest.setSize(500, 500);
+        DialogFriendRequest.setSize(300, 300);
         DialogFriendRequest.show();
     }//GEN-LAST:event_listFriendRequestsValueChanged
 
@@ -1380,7 +1438,7 @@ public class Client extends javax.swing.JFrame {
 
     private void btnAddAIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAIActionPerformed
         // TODO add your handling code here:
-        data.setAddNewItem((String) data.getAvailableProds().elementAt(availableItemIndex).getName());
+        data.setNewProd(data.getAvailableProds().elementAt(availableItemIndex));
         
         data.setType("typeAvailableItem");
         
@@ -1404,24 +1462,24 @@ public class Client extends javax.swing.JFrame {
 
     private void listAvailableItemsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listAvailableItemsValueChanged
         // TODO add your handling code here:
-        String freqName = listAvailableItems.getSelectedValue();
+        //String freqName = listAvailableItems.getSelectedValue();
         
         availableItemIndex = listAvailableItems.getSelectedIndex();
          
-        if(data.getAvailableProds().elementAt(availableItemIndex).getQty()==0)
+        if(myInfo.getAvailableProds().elementAt(availableItemIndex).getQty()==0)
         {
-            JOptionPane.showMessageDialog(this, "This Item Out Of Stock");
+            JOptionPane.showMessageDialog(this, "This Item is Out Of Stock");
         }else
         {
-            labelProdNameAI.setText((String) data.getAvailableProds().elementAt(availableItemIndex).getName()); 
-            labelPriceAI.setText(Integer.toString(data.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
-            textPaneProdDescAI.setText((String) data.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
+            labelProdNameAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getName()); 
+            labelPriceAI.setText(Integer.toString(myInfo.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
+            textPaneProdDescAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
             final Toolkit toolkit = Toolkit.getDefaultToolkit();
             final Dimension screenSize = toolkit.getScreenSize();
             final int XPOSITION = (screenSize.width - DialogAvailableItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogAvailableItem.getHeight())/4 ;
             DialogAvailableItem.setLocation(XPOSITION, YPOSITION);
-            DialogAvailableItem.setSize(500, 500);
+            DialogAvailableItem.setSize(300, 300);
             DialogAvailableItem.show();
         }
     }//GEN-LAST:event_listAvailableItemsValueChanged
@@ -1430,8 +1488,10 @@ public class Client extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         listMyWishIndex=listMyWish.getSelectedIndex();
+        if(listMyWish.getSelectedValue() != null){ 
         int percentage = myInfo.getWishList().elementAt(listMyWishIndex).getPaid()*100/myInfo.getWishList().elementAt(listMyWishIndex).getPrice();
-            labelProdNameMI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getName()); 
+           
+        labelProdNameMI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getName()); 
             labelPriceMI.setText(Integer.toString(myInfo.getWishList().elementAt(listMyWishIndex).getPrice()) );
             textPaneProdDescAI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getDesc()); 
             System.out.println(percentage);
@@ -1442,9 +1502,9 @@ public class Client extends javax.swing.JFrame {
             final int XPOSITION = (screenSize.width - DialogMyItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogMyItem.getHeight())/4 ;
             DialogMyItem.setLocation(XPOSITION, YPOSITION);
-            DialogMyItem.setSize(500, 500);
+            DialogMyItem.setSize(300, 300);
             DialogMyItem.show();
-            
+        }
         
 
     }//GEN-LAST:event_listMyWishValueChanged

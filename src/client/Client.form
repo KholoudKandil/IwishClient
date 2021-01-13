@@ -679,19 +679,17 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btnRemoveFriend" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="labelNewFriend" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                  <Component id="btnSendRequest" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="btnFriendName" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="scrollPanelFriends" alignment="0" pref="113" max="32767" attributes="0"/>
-                                          <Component id="labelFriendList" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="labelFriendWishList" min="-2" max="-2" attributes="0"/>
-                                          <Component id="scrollPanelFriendWish" min="-2" pref="147" max="-2" attributes="0"/>
-                                      </Group>
+                              <Component id="btnSendRequest" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="btnFriendName" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="scrollPanelFriends" alignment="0" pref="113" max="32767" attributes="0"/>
+                                      <Component id="labelFriendList" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="labelFriendWishList" min="-2" max="-2" attributes="0"/>
+                                      <Component id="scrollPanelFriendWish" min="-2" pref="147" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -1127,7 +1125,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="jButton2">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="jButton2"/>
+                    <Property name="text" type="java.lang.String" value="Add credit"/>
                   </Properties>
                 </Component>
               </SubComponents>
