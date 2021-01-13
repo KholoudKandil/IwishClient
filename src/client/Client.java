@@ -315,12 +315,27 @@ public class Client extends javax.swing.JFrame {
     
     void repContribute(UserInfo data) {
         if ("success".equals(data.getResult())) {
-            JOptionPane.showMessageDialog(this, "you contributed successfully");
-            txtContributionAmountFI.setText("");
+            int contributamount = Integer.parseInt(txtContributionAmountFI.getText().trim());
+            int actual = data.getContribution().getActualAmount();
             
+            System.out.print(actual);
+            
+            System.out.print(contributamount);
+            
+            if (actual == contributamount) {
+                JOptionPane.showMessageDialog(this, "you contributed successfully ");
+                txtContributionAmountFI.setText("");
+                labelCredit.setText(Integer.toString(data.getCredit()));
+            } else {
+                JOptionPane.showMessageDialog(this, "you actually contributed with " + actual + " and your gift completed");
+
+                txtContributionAmountFI.setText("");
+                labelCredit.setText(Integer.toString(data.getCredit()));
+            }
+
         } else {
             JOptionPane.showMessageDialog(this, "your contribution failed");
-            
+
         }
     }
     
