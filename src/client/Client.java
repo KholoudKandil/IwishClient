@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import javax.swing.ListModel;
 
 
@@ -50,14 +51,16 @@ public class Client extends javax.swing.JFrame {
     boolean wishListFire= false; // wishlist integraty flag
     Vector <ProdInfo> friendProducts;
     Vector friendRequests;
-    
-    String reply;
-    UserInfo myInfo;
+    int availableItemIndex=-1;
+    int listMyWishIndex=-1;
+    //String reply;
+    static UserInfo myInfo;
     UserInfo data;
     
     public Client() {
         initComponents();
         
+        //UserInfo data = new UserInfo();
         cl = (CardLayout)basePane.getLayout();
         connClient(); // connect client to server
         // initialize the HashMap
@@ -78,7 +81,7 @@ public class Client extends javax.swing.JFrame {
                             String msg = dis.readLine();
                             //reply = msg;
                             if (msg != null) {
-                                // data = new Gson().fromJson(msg, UserInfo.class);
+                                
                                 System.out.println(msg);
                                 handleRepMsg(msg);
                             }
@@ -142,6 +145,12 @@ public class Client extends javax.swing.JFrame {
             case "contribute":
                 repContribute(data);
                 break;
+            case "typeAvailableItem":
+                FunAvailableItem(data);
+                break;
+            case "typeRemoveItem":
+                FunRemoveItem(data);
+                break;
             default:
             // code block
         }
@@ -150,25 +159,15 @@ public class Client extends javax.swing.JFrame {
     void repLogMsg(UserInfo data) {
         if (data.getResult().equals("success")) { // move to next panel
             System.out.println("success");
-            //System.out.println(data);
-            //myInfo = new UserInfo(data);
-            myInfo.setType(data.getType());
-            myInfo.setUsrName(data.getUsrName());
-            myInfo.setWishList(new Vector(data.getWishList()));
-            myInfo.setAvailableProds(new Vector(data.getAvailableProds()));
-            myInfo.setPendFriends(new Vector(data.getPendFriends()));
-            myInfo.setContribution(data.getContribution());
-            myInfo.setAprvFriends(new Vector(data.getAprvFriends()));
-            myInfo.setCompletedProds(new Vector(data.getCompletedProds()));
-            myInfo.setFriendName(data.getFriendName());
-            myInfo.setCredit(data.getCredit());
-            myInfo.setFlagFriendReq(data.getFlagFriendReq());
-/*
-        this.email = usrInfo.getEmail();
-        this.fname = usrInfo.getFname();
-        this.lname = usrInfo.getLname();
-*/
-
+            
+            
+            myInfo = data.copy();
+            //System.out.println("My info after copy "+ myInfo.getUsrName());
+            //Filling profile details
+            txtUsrNameProfile.setText(myInfo.getUsrName());
+            txtFullNameProfile.setText(myInfo.getFname()+ " " + myInfo.getLname());
+            txtEmailProfile.setText(myInfo.getEmail());
+            txtCreditProfile.setText(Integer.toString(myInfo.getCredit()));
             System.out.println("My UsrName data  "+data.getUsrName());
             System.out.println("My UsrName myInfo  "+myInfo.getUsrName());
             DefaultListModel temp = new DefaultListModel<>();
@@ -217,6 +216,11 @@ public class Client extends javax.swing.JFrame {
             System.out.println( "Product name " +prod.getName());
             
             }
+            for(String prodName : myInfo.getCompletedContributions()){
+            notificationList.addElement("WELL DONE!!  Your got "+ myInfo.getFriendName() + " a " +prodName);
+            System.out.println( "Product name " +prodName);
+            
+            }
             listNotification.setModel(notificationList);
             
             // add credit
@@ -228,14 +232,16 @@ public class Client extends javax.swing.JFrame {
         
         } else {
             System.out.println("Wrong user name or password"); // give dialog box as wrong usr or pw
+            JOptionPane.showMessageDialog(this, "Invalid UserName or Password", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
     void repRegMsg(UserInfo data) {
         if (data.getResult().equals("success")) { // move to next panel
+            //repLogMsg(data);
             System.out.println("success");
         } else {
-            JOptionPane.showMessageDialog(this, "User Already Created");
+            JOptionPane.showMessageDialog(this, "Invalid Inputs", "Registeration Error",JOptionPane.ERROR_MESSAGE);
             System.out.println("Error occure, please try again"); // error
         }
     }
@@ -257,17 +263,24 @@ public class Client extends javax.swing.JFrame {
     }
     
     void reprmFriend(UserInfo data){
-        if(data.getResult()== "success"){
+        if(data.getResult().equals("success")){
+            System.out.println(myInfo.getAprvFriends());
             
             myInfo.getAprvFriends().removeElement(data.getFriendName());
+            System.out.println(myInfo.getAprvFriends());
+            
             DefaultListModel temp = new DefaultListModel();
             
             for(Object friend : myInfo.getAprvFriends()){
                 temp.addElement(friend);
             }
-            System.out.println(myInfo);
+            //System.out.println(myInfo);
+
             listFriends.setModel(temp);
             
+            DefaultListModel temp2 = new DefaultListModel();
+            listFriendWish.setModel(temp2);
+
         }
         
     }
@@ -300,6 +313,25 @@ public class Client extends javax.swing.JFrame {
             
         }
     }
+    
+    void FunRemoveItem(UserInfo data){
+            if("success".equals(data.getResult())){
+                JOptionPane.showMessageDialog(this, "Item Removed Succfully");
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "please try again");
+            }       
+    }
+    void FunAvailableItem(UserInfo data) {
+        if (data.getResult().equals("success")) { 
+            
+            JOptionPane.showMessageDialog(this,"Item Added Succfully");
+        } else {
+            JOptionPane.showMessageDialog(this,"please try again"); // error
+        }
+    }
+    
+    
     
         /**
      * This method is called from within the constructor to initialize the form.
@@ -372,7 +404,6 @@ public class Client extends javax.swing.JFrame {
         btnSendRequest = new javax.swing.JButton();
         btnFriendName = new javax.swing.JTextField();
         labelNewFriend = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         panelMyWishList = new javax.swing.JPanel();
         labelMyWish = new javax.swing.JLabel();
         scrollPanelAvailableItems = new javax.swing.JScrollPane();
@@ -387,6 +418,16 @@ public class Client extends javax.swing.JFrame {
         panelNotifications = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listNotification = new javax.swing.JList<>();
+        panelProfile = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtUsrNameProfile = new javax.swing.JTextField();
+        txtFullNameProfile = new javax.swing.JTextField();
+        txtEmailProfile = new javax.swing.JTextField();
+        txtCreditProfile = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
 
         labelProdNameFI.setText("<product name>");
 
@@ -413,21 +454,21 @@ public class Client extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(txtContributionAmountFI)
                         .addGap(18, 18, 18)
-                        .addComponent(btnContributeFI)
-                        .addGap(87, 87, 87))
+                        .addComponent(btnContributeFI))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(labelProdNameFI)
-                        .addGap(93, 93, 93)
-                        .addComponent(labelPriceFI)
-                        .addContainerGap(185, Short.MAX_VALUE))
+                        .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(labelCredit))
-                            .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(labelProdNameFI)
+                                .addGap(93, 93, 93)
+                                .addComponent(labelPriceFI)))
+                        .addContainerGap(111, Short.MAX_VALUE))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -437,8 +478,8 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(labelProdNameFI)
                     .addComponent(labelPriceFI))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(labelCredit))
@@ -446,14 +487,16 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnContributeFI)
                     .addComponent(txtContributionAmountFI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout DialogFriendItemLayout = new javax.swing.GroupLayout(DialogFriendItem.getContentPane());
         DialogFriendItem.getContentPane().setLayout(DialogFriendItemLayout);
         DialogFriendItemLayout.setHorizontalGroup(
             DialogFriendItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(DialogFriendItemLayout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         DialogFriendItemLayout.setVerticalGroup(
             DialogFriendItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -463,6 +506,11 @@ public class Client extends javax.swing.JFrame {
         labelProdNameAI.setText("<product name>");
 
         btnAddAI.setText("Add To My List");
+        btnAddAI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddAIActionPerformed(evt);
+            }
+        });
 
         scrollPaneProdDescAI.setViewportView(textPaneProdDescAI);
 
@@ -611,7 +659,11 @@ public class Client extends javax.swing.JFrame {
         basePane.setMinimumSize(new java.awt.Dimension(100, 100));
         basePane.setLayout(new java.awt.CardLayout());
 
-        txtLogUsr.setText("jTextField1");
+        txtLogUsr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLogUsrActionPerformed(evt);
+            }
+        });
 
         loginBtn.setText("Login");
         loginBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -634,11 +686,11 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(userLabel)
                     .addComponent(passwdLabel))
                 .addGap(24, 24, 24)
-                .addGroup(loginTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(loginBtn, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtLogUsr, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtLogPw, javax.swing.GroupLayout.Alignment.LEADING))
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addGroup(loginTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(loginBtn)
+                    .addComponent(txtLogUsr, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                    .addComponent(txtLogPw))
+                .addContainerGap(218, Short.MAX_VALUE))
         );
         loginTabLayout.setVerticalGroup(
             loginTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -701,7 +753,7 @@ public class Client extends javax.swing.JFrame {
                         .addGroup(regsPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(regsPane1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                                 .addComponent(txtRegFname, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(regsPane1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
@@ -762,7 +814,7 @@ public class Client extends javax.swing.JFrame {
 
         basePane.add(loginRegsPane, "card5");
 
-        mainPane.setPreferredSize(new java.awt.Dimension(320, 375));
+        mainPane.setPreferredSize(new java.awt.Dimension(400, 400));
 
         listFriends.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -802,8 +854,6 @@ public class Client extends javax.swing.JFrame {
 
         labelNewFriend.setText("Add new friend");
 
-        jButton2.setText("Log out");
-
         javax.swing.GroupLayout panelFriendsLayout = new javax.swing.GroupLayout(panelFriends);
         panelFriends.setLayout(panelFriendsLayout);
         panelFriendsLayout.setHorizontalGroup(
@@ -813,11 +863,8 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnRemoveFriend)
                     .addComponent(labelNewFriend)
-                    .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFriendsLayout.createSequentialGroup()
-                            .addComponent(btnSendRequest)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton2))
+                    .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnSendRequest, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFriendsLayout.createSequentialGroup()
                             .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(btnFriendName, javax.swing.GroupLayout.Alignment.LEADING)
@@ -827,7 +874,7 @@ public class Client extends javax.swing.JFrame {
                             .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(labelFriendWishList)
                                 .addComponent(scrollPanelFriendWish, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         panelFriendsLayout.setVerticalGroup(
             panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -842,14 +889,12 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(scrollPanelFriends))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnRemoveFriend)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(labelNewFriend)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnFriendName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSendRequest)
-                    .addComponent(jButton2))
+                .addComponent(btnSendRequest)
                 .addContainerGap())
         );
 
@@ -859,12 +904,27 @@ public class Client extends javax.swing.JFrame {
 
         labelMyWish.setText("My Wish List");
 
+        listAvailableItems.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listAvailableItemsValueChanged(evt);
+            }
+        });
         scrollPanelAvailableItems.setViewportView(listAvailableItems);
 
         labelAvailableItems.setText("Avaiable Items");
 
         btnRemoveItem.setText("Remove ");
+        btnRemoveItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveItemActionPerformed(evt);
+            }
+        });
 
+        listMyWish.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listMyWishValueChanged(evt);
+            }
+        });
         jScrollPane2.setViewportView(listMyWish);
 
         javax.swing.GroupLayout panelMyWishListLayout = new javax.swing.GroupLayout(panelMyWishList);
@@ -881,7 +941,7 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelAvailableItems)
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         panelMyWishListLayout.setVerticalGroup(
             panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -897,7 +957,7 @@ public class Client extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnRemoveItem))
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
 
         mainPane.addTab("My Wishlist", panelMyWishList);
@@ -913,29 +973,106 @@ public class Client extends javax.swing.JFrame {
         panelFriendRequests.setLayout(panelFriendRequestsLayout);
         panelFriendRequestsLayout.setHorizontalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
         );
         panelFriendRequestsLayout.setVerticalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Friend Requests", panelFriendRequests);
 
+        listNotification.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listNotificationValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(listNotification);
 
         javax.swing.GroupLayout panelNotificationsLayout = new javax.swing.GroupLayout(panelNotifications);
         panelNotifications.setLayout(panelNotificationsLayout);
         panelNotificationsLayout.setHorizontalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
         );
         panelNotificationsLayout.setVerticalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Gifts Notifications", panelNotifications);
+
+        jLabel7.setBackground(new java.awt.Color(153, 255, 255));
+        jLabel7.setText("User Name: ");
+
+        jLabel8.setText("Full Name:");
+
+        jLabel9.setText("Email");
+
+        jLabel10.setText("Credit:");
+
+        txtUsrNameProfile.setEditable(false);
+        txtUsrNameProfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsrNameProfileActionPerformed(evt);
+            }
+        });
+
+        txtFullNameProfile.setEditable(false);
+
+        txtEmailProfile.setEditable(false);
+
+        txtCreditProfile.setEditable(false);
+
+        jButton2.setText("jButton2");
+
+        javax.swing.GroupLayout panelProfileLayout = new javax.swing.GroupLayout(panelProfile);
+        panelProfile.setLayout(panelProfileLayout);
+        panelProfileLayout.setHorizontalGroup(
+            panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelProfileLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2)
+                    .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(txtUsrNameProfile)
+                        .addComponent(txtFullNameProfile)
+                        .addComponent(txtEmailProfile)
+                        .addComponent(txtCreditProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)))
+                .addContainerGap(213, Short.MAX_VALUE))
+        );
+        panelProfileLayout.setVerticalGroup(
+            panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelProfileLayout.createSequentialGroup()
+                .addGap(115, 115, 115)
+                .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelProfileLayout.createSequentialGroup()
+                        .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7)
+                            .addComponent(txtUsrNameProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(txtFullNameProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel9))
+                    .addComponent(txtEmailProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtCreditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addContainerGap(82, Short.MAX_VALUE))
+        );
+
+        mainPane.addTab("Profile", panelProfile);
 
         basePane.add(mainPane, "card2");
         mainPane.getAccessibleContext().setAccessibleName("Friends");
@@ -948,7 +1085,7 @@ public class Client extends javax.swing.JFrame {
     private void btnRemoveFriendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveFriendActionPerformed
         // TODO add your handling code here:
         // prepare obj
-        data = new UserInfo();
+        //data = new UserInfo();
         data.setUsrName(myInfo.getUsrName());
         data.setFriendName(listFriends.getSelectedValue());
         data.setType("rmFriend");
@@ -971,33 +1108,32 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRemoveFriendActionPerformed
 
     private void listFriendsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendsValueChanged
-        // TODO add your handling code here:
-        //DefaultListModel friendWishList= new DefaultListModel();
-        
-        //Prepare obj for fWish
-        String friendName = listFriends.getSelectedValue();
-        data= new UserInfo();
-        data.setUsrName(friendName);
-        data.setType("fWish");
-        
-        //edit labels
-        labelFriendWishList.setText(friendName + " wants");
-        
-        // obj to json
-        String msg = new Gson().toJson(data);
-        
-        // send if server is on
-        if(serverIsOff == true) {
-            connClient();
-            if(serverIsOff == false) {
+    String friendName = listFriends.getSelectedValue();
+        System.out.println("Friend name outside if---------------- " + friendName);
+        if (friendName != null) {
+            System.out.println("Friend name inside if---------------- " + friendName);
+            data = new UserInfo();
+            data.setUsrName(friendName);
+            data.setType("fWish");
+
+            //edit labels
+            labelFriendWishList.setText(friendName + " wants");
+
+            // obj to json
+            String msg = new Gson().toJson(data);
+
+            // send if server is on
+            if (serverIsOff == true) {
+                connClient();
+                if (serverIsOff == false) {
+                    ps.println(msg);
+                    ps.flush();
+                }
+            } else {
+                //System.out.println(msg);
                 ps.println(msg);
                 ps.flush();
-                }
-        }
-        else {
-            System.out.println(msg);
-            ps.println(msg);
-            ps.flush();
+            }
         }
         
         
@@ -1147,7 +1283,7 @@ public class Client extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         // prepare obj for log
-        data = new UserInfo();
+        //data = new UserInfo();
         data.setUsrName(myInfo.getUsrName());
         data.setType("friendRequest");
         data.setFriendName(btnFriendName.getText().trim());
@@ -1237,6 +1373,114 @@ public class Client extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnDeclineActionPerformed
 
+    private void listNotificationValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listNotificationValueChanged
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_listNotificationValueChanged
+
+    private void btnAddAIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAIActionPerformed
+        // TODO add your handling code here:
+        data.setAddNewItem((String) data.getAvailableProds().elementAt(availableItemIndex).getName());
+        
+        data.setType("typeAvailableItem");
+        
+        // obj to json
+        String msg = new Gson().toJson(data);
+        
+        // send if server is on
+        if(serverIsOff == true) {
+            connClient();
+            if(serverIsOff == false) {
+                ps.println(msg);
+                ps.flush();
+                }
+        }
+        else {
+            System.out.println(msg);
+            ps.println(msg);
+            ps.flush();
+        }
+    }//GEN-LAST:event_btnAddAIActionPerformed
+
+    private void listAvailableItemsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listAvailableItemsValueChanged
+        // TODO add your handling code here:
+        String freqName = listAvailableItems.getSelectedValue();
+        
+        availableItemIndex = listAvailableItems.getSelectedIndex();
+         
+        if(data.getAvailableProds().elementAt(availableItemIndex).getQty()==0)
+        {
+            JOptionPane.showMessageDialog(this, "This Item Out Of Stock");
+        }else
+        {
+            labelProdNameAI.setText((String) data.getAvailableProds().elementAt(availableItemIndex).getName()); 
+            labelPriceAI.setText(Integer.toString(data.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
+            textPaneProdDescAI.setText((String) data.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
+            final Toolkit toolkit = Toolkit.getDefaultToolkit();
+            final Dimension screenSize = toolkit.getScreenSize();
+            final int XPOSITION = (screenSize.width - DialogAvailableItem.getWidth())/4 ;
+            final int YPOSITION  = (screenSize.height - DialogAvailableItem.getHeight())/4 ;
+            DialogAvailableItem.setLocation(XPOSITION, YPOSITION);
+            DialogAvailableItem.setSize(500, 500);
+            DialogAvailableItem.show();
+        }
+    }//GEN-LAST:event_listAvailableItemsValueChanged
+
+    private void listMyWishValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listMyWishValueChanged
+        // TODO add your handling code here:
+        
+        listMyWishIndex=listMyWish.getSelectedIndex();
+        int percentage = myInfo.getWishList().elementAt(listMyWishIndex).getPaid()*100/myInfo.getWishList().elementAt(listMyWishIndex).getPrice();
+            labelProdNameMI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getName()); 
+            labelPriceMI.setText(Integer.toString(myInfo.getWishList().elementAt(listMyWishIndex).getPrice()) );
+            textPaneProdDescAI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getDesc()); 
+            System.out.println(percentage);
+            progBarMoney.setStringPainted(true);
+            progBarMoney.setValue(percentage);
+            final Toolkit toolkit = Toolkit.getDefaultToolkit();
+            final Dimension screenSize = toolkit.getScreenSize();
+            final int XPOSITION = (screenSize.width - DialogMyItem.getWidth())/4 ;
+            final int YPOSITION  = (screenSize.height - DialogMyItem.getHeight())/4 ;
+            DialogMyItem.setLocation(XPOSITION, YPOSITION);
+            DialogMyItem.setSize(500, 500);
+            DialogMyItem.show();
+            
+        
+
+    }//GEN-LAST:event_listMyWishValueChanged
+
+    private void btnRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveItemActionPerformed
+        // TODO add your handling code here:
+        data.setRemoveItem((String) data.getWishList().elementAt(listMyWishIndex).getName());
+        System.out.println("item will removed =  "+  data.getRemoveItem());
+        data.setType("typeRemoveItem");
+        
+        // obj to json
+        String msg = new Gson().toJson(data);
+        
+        // send if server is on
+        if(serverIsOff == true) {
+            connClient();
+            if(serverIsOff == false) {
+                ps.println(msg);
+                ps.flush();
+                }
+        }
+        else {
+            System.out.println(msg);
+            ps.println(msg);
+            ps.flush();
+        }
+    }//GEN-LAST:event_btnRemoveItemActionPerformed
+
+    private void txtLogUsrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLogUsrActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLogUsrActionPerformed
+
+    private void txtUsrNameProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsrNameProfileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsrNameProfileActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1292,11 +1536,15 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
@@ -1329,6 +1577,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JPanel panelFriends;
     private javax.swing.JPanel panelMyWishList;
     private javax.swing.JPanel panelNotifications;
+    private javax.swing.JPanel panelProfile;
     private javax.swing.JLabel passwdLabel;
     private javax.swing.JProgressBar progBarMoney;
     private javax.swing.JPanel regsPane1;
@@ -1343,6 +1592,9 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JTextPane textPaneProdDescFI;
     private javax.swing.JTextPane textPaneProdDescMI;
     private javax.swing.JTextField txtContributionAmountFI;
+    private javax.swing.JTextField txtCreditProfile;
+    private javax.swing.JTextField txtEmailProfile;
+    private javax.swing.JTextField txtFullNameProfile;
     private javax.swing.JPasswordField txtLogPw;
     private javax.swing.JTextField txtLogUsr;
     private javax.swing.JTextField txtRegEmail;
@@ -1350,6 +1602,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JTextField txtRegLname;
     private javax.swing.JPasswordField txtRegPw;
     private javax.swing.JTextField txtRegUsr;
+    private javax.swing.JTextField txtUsrNameProfile;
     private javax.swing.JLabel userLabel;
     // End of variables declaration//GEN-END:variables
 }
