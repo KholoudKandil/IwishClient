@@ -9,6 +9,7 @@ package client;
 import com.google.gson.Gson;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import javax.swing.ListModel;
@@ -151,6 +153,9 @@ public class Client extends javax.swing.JFrame {
             case "typeRemoveItem":
                 FunRemoveItem(data);
                 break;
+            case "updateCredit":
+                repUpdateCredit(data);
+                break;
             default:
             // code block
         }
@@ -239,8 +244,19 @@ public class Client extends javax.swing.JFrame {
     void repRegMsg(UserInfo data) {
         if (data.getResult().equals("success")) { // move to next panel
             //repLogMsg(data);
+            JOptionPane.showMessageDialog(this, "User Created successfuly");
             System.out.println("success");
-        } else {
+        loginRegsPane.setSelectedIndex(0);
+        txtRegFname.setText("");
+        txtRegLname.setText("");
+        txtRegUsr.setText("");
+        txtRegPw.setText("");
+        txtRegEmail.setText("");
+        } else if("1".equals(data.getResult())){
+                JOptionPane.showMessageDialog(this, "User Name already taken");
+            
+        }else {
+            
             JOptionPane.showMessageDialog(this, "Invalid Inputs", "Registeration Error",JOptionPane.ERROR_MESSAGE);
             System.out.println("Error occure, please try again"); // error
         }
@@ -306,10 +322,37 @@ public class Client extends javax.swing.JFrame {
     }
     void dialFUNFriendRequest(UserInfo data){
             if("success".equals(data.getResult())&&data.getFlagFriendReq()==true){
-                JOptionPane.showMessageDialog(this, "Friend Added Succfully");
                 
+                DialogFriendRequest.setVisible(false);
+            //updating friend list to add the new friend   
+            myInfo.setAprvFriends(data.getAprvFriends());
+            DefaultListModel temp = new DefaultListModel();
+            for(Object friend : myInfo.getAprvFriends()){
+                temp.addElement(friend);
+            }
+                listFriends.setModel(temp);
+                
+            //updating freind requests list to remove the request
+            
+            myInfo.setPendFriends(data.getPendFriends());
+            DefaultListModel temp2 = new DefaultListModel();
+            for(Object friendReq : myInfo.getPendFriends()){
+                temp2.addElement(friendReq + " wants to be your friend");
+            }
+                listFriendRequests.setModel(temp2);
+            
+            JOptionPane.showMessageDialog(this, "Friend Added Succfully");
+            
             }
             else if("success".equals(data.getResult())&&data.getFlagFriendReq()==false){
+                
+                //updating freind requests list to remove the request
+            myInfo.getPendFriends().removeElement(data.getFriendName());
+            DefaultListModel temp2 = new DefaultListModel();
+            for(Object friendReq : myInfo.getPendFriends()){
+                temp2.addElement(friendReq);
+            }
+                listFriendRequests.setModel(temp2);
                 JOptionPane.showMessageDialog(this, "Friend's Request Decline");
             }
     }
@@ -365,13 +408,10 @@ public class Client extends javax.swing.JFrame {
             if("success".equals(data.getResult())){
             myInfo.getWishList().addElement(data.getNewProd());
            //(listMyWishIndex);
-            
-            System.out.println(myInfo.getWishList());
-            
             DefaultListModel temp = new DefaultListModel();
             
-            for(ProdInfo prod : myInfo.getWishList()){
-                temp.addElement(prod.getName());
+            for(Object friendReq : myInfo.getPendFriends()){
+                temp.addElement(friendReq);
             }
             //System.out.println(myInfo);
             listMyWish.setModel(temp);
@@ -383,6 +423,17 @@ public class Client extends javax.swing.JFrame {
     }
     
     
+            void repUpdateCredit (UserInfo data) {
+     if ("success".equals(data.getResult())) {
+          //txtCreditProfile.setText(Integer.toString(data.getCredit()));
+           myInfo.setCredit(data.getCredit());
+           JOptionPane.showMessageDialog(this, "your credit is updated");
+
+     } else {
+            JOptionPane.showMessageDialog(this, "your update failed");
+
+        }
+    }
     
         /**
      * This method is called from within the constructor to initialize the form.
@@ -403,6 +454,7 @@ public class Client extends javax.swing.JFrame {
         labelPriceFI = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         labelCredit = new javax.swing.JLabel();
+        labelProdImgFI = new javax.swing.JLabel();
         DialogAvailableItem = new javax.swing.JDialog();
         jPanel7 = new javax.swing.JPanel();
         labelProdNameAI = new javax.swing.JLabel();
@@ -410,6 +462,7 @@ public class Client extends javax.swing.JFrame {
         scrollPaneProdDescAI = new javax.swing.JScrollPane();
         textPaneProdDescAI = new javax.swing.JTextPane();
         labelPriceAI = new javax.swing.JLabel();
+        labelProdImgAI = new javax.swing.JLabel();
         DialogMyItem = new javax.swing.JDialog();
         jPanel8 = new javax.swing.JPanel();
         labelProdNameMI = new javax.swing.JLabel();
@@ -417,6 +470,7 @@ public class Client extends javax.swing.JFrame {
         textPaneProdDescMI = new javax.swing.JTextPane();
         labelPriceMI = new javax.swing.JLabel();
         progBarMoney = new javax.swing.JProgressBar();
+        labelProdImgMI = new javax.swing.JLabel();
         DialogFriendRequest = new javax.swing.JDialog();
         labelRequest = new javax.swing.JLabel();
         btnAccept = new javax.swing.JButton();
@@ -442,7 +496,6 @@ public class Client extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         mainPane = new javax.swing.JTabbedPane();
         panelFriends = new javax.swing.JPanel();
         scrollPanelFriends = new javax.swing.JScrollPane();
@@ -478,7 +531,7 @@ public class Client extends javax.swing.JFrame {
         txtFullNameProfile = new javax.swing.JTextField();
         txtEmailProfile = new javax.swing.JTextField();
         txtCreditProfile = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        btnUpdateCredit = new javax.swing.JButton();
 
         labelProdNameFI.setText("<product name>");
 
@@ -495,6 +548,9 @@ public class Client extends javax.swing.JFrame {
 
         jLabel6.setText("Your Credit Limit is  ");
 
+        labelProdImgFI.setMaximumSize(new java.awt.Dimension(500, 500));
+        labelProdImgFI.setPreferredSize(new java.awt.Dimension(350, 350));
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -505,40 +561,45 @@ public class Client extends javax.swing.JFrame {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(txtContributionAmountFI)
                         .addGap(18, 18, 18)
-                        .addComponent(btnContributeFI))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(btnContributeFI)
+                        .addGap(115, 115, 115))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelCredit))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addComponent(labelProdNameFI)
                                 .addGap(93, 93, 93)
-                                .addComponent(labelPriceFI)))
-                        .addContainerGap(111, Short.MAX_VALUE))))
+                                .addComponent(labelPriceFI))
+                            .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelCredit)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelProdImgFI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(58, Short.MAX_VALUE))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(60, 60, 60)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelProdNameFI)
-                    .addComponent(labelPriceFI))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelProdNameFI)
+                            .addComponent(labelPriceFI))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scrollPaneProdDescFI, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(labelCredit))
+                        .addGap(0, 13, Short.MAX_VALUE))
+                    .addComponent(labelProdImgFI, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(labelCredit))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnContributeFI)
                     .addComponent(txtContributionAmountFI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
         javax.swing.GroupLayout DialogFriendItemLayout = new javax.swing.GroupLayout(DialogFriendItem.getContentPane());
@@ -567,6 +628,9 @@ public class Client extends javax.swing.JFrame {
 
         labelPriceAI.setText("<price>");
 
+        labelProdImgAI.setMaximumSize(new java.awt.Dimension(500, 500));
+        labelProdImgAI.setPreferredSize(new java.awt.Dimension(350, 350));
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -586,6 +650,11 @@ public class Client extends javax.swing.JFrame {
                 .addGap(108, 108, 108)
                 .addComponent(btnAddAI)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGap(133, 133, 133)
+                    .addComponent(labelProdImgAI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(133, Short.MAX_VALUE)))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -599,6 +668,11 @@ public class Client extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnAddAI)
                 .addGap(20, 20, 20))
+            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGap(77, 77, 77)
+                    .addComponent(labelProdImgAI, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                    .addGap(77, 77, 77)))
         );
 
         javax.swing.GroupLayout DialogAvailableItemLayout = new javax.swing.GroupLayout(DialogAvailableItem.getContentPane());
@@ -618,6 +692,9 @@ public class Client extends javax.swing.JFrame {
 
         labelPriceMI.setText("<price>");
 
+        labelProdImgMI.setMaximumSize(new java.awt.Dimension(500, 500));
+        labelProdImgMI.setPreferredSize(new java.awt.Dimension(350, 350));
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
@@ -635,6 +712,11 @@ public class Client extends javax.swing.JFrame {
                             .addComponent(scrollPaneProdDescMI, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                             .addComponent(progBarMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel8Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(labelProdImgMI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -648,6 +730,11 @@ public class Client extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(progBarMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel8Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(labelProdImgMI, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
         javax.swing.GroupLayout DialogMyItemLayout = new javax.swing.GroupLayout(DialogMyItem.getContentPane());
@@ -791,8 +878,6 @@ public class Client extends javax.swing.JFrame {
 
         jLabel5.setText("Password");
 
-        jButton1.setText("Login Now");
-
         javax.swing.GroupLayout regsPane1Layout = new javax.swing.GroupLayout(regsPane1);
         regsPane1.setLayout(regsPane1Layout);
         regsPane1Layout.setHorizontalGroup(
@@ -822,9 +907,7 @@ public class Client extends javax.swing.JFrame {
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtRegEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(regsPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton1)
-                        .addComponent(createBtn)))
+                    .addComponent(createBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(clearBtn)
                 .addGap(116, 116, 116))
@@ -856,9 +939,7 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(regsPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createBtn)
                     .addComponent(clearBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(50, 50, 50))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
 
         loginRegsPane.addTab("Registration", regsPane1);
@@ -1072,9 +1153,12 @@ public class Client extends javax.swing.JFrame {
 
         txtEmailProfile.setEditable(false);
 
-        txtCreditProfile.setEditable(false);
-
-        jButton2.setText("Add credit");
+        btnUpdateCredit.setText("Update credit");
+        btnUpdateCredit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateCreditActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelProfileLayout = new javax.swing.GroupLayout(panelProfile);
         panelProfile.setLayout(panelProfileLayout);
@@ -1089,13 +1173,13 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(jLabel10))
                 .addGap(18, 18, 18)
                 .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
+                    .addComponent(btnUpdateCredit)
                     .addGroup(panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(txtUsrNameProfile)
                         .addComponent(txtFullNameProfile)
                         .addComponent(txtEmailProfile)
                         .addComponent(txtCreditProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)))
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
         );
         panelProfileLayout.setVerticalGroup(
             panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1118,7 +1202,7 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(txtCreditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(btnUpdateCredit)
                 .addContainerGap(82, Short.MAX_VALUE))
         );
 
@@ -1159,13 +1243,13 @@ public class Client extends javax.swing.JFrame {
 
     private void listFriendsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendsValueChanged
     String friendName = listFriends.getSelectedValue();
-        System.out.println("Friend name outside if---------------- " + friendName);
+        //System.out.println("Friend name outside if---------------- " + friendName);
         if (friendName != null) {
             System.out.println("Friend name inside if---------------- " + friendName);
             data = new UserInfo();
             data.setUsrName(friendName);
             data.setType("fWish");
-
+            
             //edit labels
             labelFriendWishList.setText(friendName + " wants");
 
@@ -1208,10 +1292,13 @@ public class Client extends javax.swing.JFrame {
         labelProdNameFI.setText(friendProducts.elementAt(itemIndex).getName()); 
         labelPriceFI.setText(Integer.toString(friendProducts.elementAt(itemIndex).getPrice()));
         textPaneProdDescFI.setText(friendProducts.elementAt(itemIndex).getDesc());
+        labelProdImgFI.setSize(150, 150);
+        ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getWishList().elementAt(listFriendWish.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgFI.getWidth(), labelProdImgFI.getHeight(), Image.SCALE_DEFAULT));
+        labelProdImgFI.setIcon(imageIcon);
         System.out.println(friendProducts.elementAt(itemIndex).getName());
         
         DialogFriendItem.setLocation(XPOSITION, YPOSITION);
-        DialogFriendItem.setSize(300, 300);
+        DialogFriendItem.setSize(500, 500);
         DialogFriendItem.show();
        }
     }//GEN-LAST:event_listFriendWishValueChanged
@@ -1292,6 +1379,10 @@ public class Client extends javax.swing.JFrame {
 
     private void btnContributeFIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContributeFIActionPerformed
         // TODO add your handling code here:
+        if(txtContributionAmountFI.getText().isEmpty() ){
+             JOptionPane.showMessageDialog(this, "set your contribution first", "Error", JOptionPane.ERROR_MESSAGE);
+        }else {
+
         int credit = Integer.parseInt(labelCredit.getText().trim());
 
         int Amountcontribute = Integer.parseInt(txtContributionAmountFI.getText().trim());
@@ -1325,6 +1416,7 @@ public class Client extends javax.swing.JFrame {
             }
         } else {
             JOptionPane.showMessageDialog(this, "you don't have enough credit", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         }
     
     }//GEN-LAST:event_btnContributeFIActionPerformed
@@ -1366,7 +1458,7 @@ public class Client extends javax.swing.JFrame {
 
     private void listFriendRequestsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendRequestsValueChanged
         // TODO add your handling code here:
-        
+        if(listFriendRequests.getSelectedValue() !=null){
         String freqName = listFriendRequests.getSelectedValue();
         final Toolkit toolkit = Toolkit.getDefaultToolkit();
         final Dimension screenSize = toolkit.getScreenSize();
@@ -1382,13 +1474,14 @@ public class Client extends javax.swing.JFrame {
         DialogFriendRequest.setLocation(XPOSITION, YPOSITION);
         DialogFriendRequest.setSize(300, 300);
         DialogFriendRequest.show();
+        }
     }//GEN-LAST:event_listFriendRequestsValueChanged
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
         // TODO add your handling code here:
         data.setFlagFriendReq(true);
         data.setType("FDialogfriendRequest");
-        
+        data.setFriendName(myInfo.getPendFriends().elementAt(listFriendRequests.getSelectedIndex()) );
         
         // obj to json
         String msg = new Gson().toJson(data);
@@ -1474,12 +1567,15 @@ public class Client extends javax.swing.JFrame {
             labelProdNameAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getName()); 
             labelPriceAI.setText(Integer.toString(myInfo.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
             textPaneProdDescAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
+            labelProdImgAI.setSize(150, 150);
+        ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getWishList().elementAt(listAvailableItems.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgMI.getWidth(), labelProdImgMI.getHeight(), Image.SCALE_DEFAULT));
+        labelProdImgAI.setIcon(imageIcon);
             final Toolkit toolkit = Toolkit.getDefaultToolkit();
             final Dimension screenSize = toolkit.getScreenSize();
             final int XPOSITION = (screenSize.width - DialogAvailableItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogAvailableItem.getHeight())/4 ;
             DialogAvailableItem.setLocation(XPOSITION, YPOSITION);
-            DialogAvailableItem.setSize(300, 300);
+            DialogAvailableItem.setSize(500, 500);
             DialogAvailableItem.show();
         }
     }//GEN-LAST:event_listAvailableItemsValueChanged
@@ -1497,12 +1593,15 @@ public class Client extends javax.swing.JFrame {
             System.out.println(percentage);
             progBarMoney.setStringPainted(true);
             progBarMoney.setValue(percentage);
+            labelProdImgMI.setSize(150, 150);
+            ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getWishList().elementAt(listMyWish.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgMI.getWidth(), labelProdImgMI.getHeight(), Image.SCALE_DEFAULT));
+            labelProdImgMI.setIcon(imageIcon);
             final Toolkit toolkit = Toolkit.getDefaultToolkit();
             final Dimension screenSize = toolkit.getScreenSize();
             final int XPOSITION = (screenSize.width - DialogMyItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogMyItem.getHeight())/4 ;
             DialogMyItem.setLocation(XPOSITION, YPOSITION);
-            DialogMyItem.setSize(300, 300);
+            DialogMyItem.setSize(500, 500);
             DialogMyItem.show();
         }
         
@@ -1540,6 +1639,32 @@ public class Client extends javax.swing.JFrame {
     private void txtUsrNameProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsrNameProfileActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsrNameProfileActionPerformed
+
+    private void btnUpdateCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateCreditActionPerformed
+        // TODO add your handling code here:
+      int  updateCredit = Integer.parseInt(txtCreditProfile.getText().trim());
+      
+      data = new UserInfo();
+      data.setCredit(updateCredit);
+      data.setUsrName(myInfo.getUsrName());
+      data.setType("updateCredit");
+      System.out.print(data.getCredit());
+    //System.out.print(data.getupdateCredit());
+      String msg = new Gson().toJson(data);
+
+            // send if server is on
+            if (serverIsOff == true) {
+                connClient();
+                if (serverIsOff == false) {
+                    ps.println(msg);
+                    ps.flush();
+                }
+            } else {
+                System.out.println(msg);
+                ps.println(msg);
+                ps.flush();
+            }
+    }//GEN-LAST:event_btnUpdateCreditActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1591,10 +1716,9 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton btnRemoveFriend;
     private javax.swing.JButton btnRemoveItem;
     private javax.swing.JButton btnSendRequest;
+    private javax.swing.JButton btnUpdateCredit;
     private javax.swing.JButton clearBtn;
     private javax.swing.JButton createBtn;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -1619,6 +1743,9 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel labelPriceAI;
     private javax.swing.JLabel labelPriceFI;
     private javax.swing.JLabel labelPriceMI;
+    private javax.swing.JLabel labelProdImgAI;
+    private javax.swing.JLabel labelProdImgFI;
+    private javax.swing.JLabel labelProdImgMI;
     private javax.swing.JLabel labelProdNameAI;
     private javax.swing.JLabel labelProdNameFI;
     private javax.swing.JLabel labelProdNameMI;
