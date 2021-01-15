@@ -53,6 +53,7 @@ public class Client extends javax.swing.JFrame {
     boolean serverIsOff = false; // server status
     boolean wishListFire= false; // wishlist integraty flag
     boolean usrIsLogged=false;
+    boolean alreadyFriends = false; 
     Vector <ProdInfo> friendProducts;
     Vector friendRequests;
     int availableItemIndex=-1;
@@ -219,15 +220,17 @@ public class Client extends javax.swing.JFrame {
             
             DefaultListModel notificationList = new DefaultListModel<>();
             for(ProdInfo prod : myInfo.getCompletedProds()){
-            Vector friends = new Vector(data.getContributedFriends());
-        //  friends.set(0,data.getcontributedFriends() );
+            Vector friends = new Vector(prod.getContributedFriends());
+        
                 notificationList.addElement("CONGRATULATIONS!! " + friends + " Got you a " + prod.getName());
-                System.out.println("Product name " + prod.getName());
+                //System.out.println("Product name " + prod.getName());
             
             }
-            for(String prodName : myInfo.getCompletedContributions()){
-            notificationList.addElement("WELL DONE!!  Your got "+ myInfo.getFriendName() + " a " +prodName);
-            System.out.println( "Product name " +prodName);
+            
+            for(ContrDetails contr : myInfo.getCompletedContributions()){
+            System.out.println("WELL DONE!!  You got "+ contr.getFriendName() + " a " +contr.getProdName());
+            notificationList.addElement("WELL DONE!!  You got "+ contr.getFriendName() + " a " +contr.getProdName());
+            
             
             }
             listNotification.setModel(notificationList);
@@ -416,8 +419,8 @@ public class Client extends javax.swing.JFrame {
            //(listMyWishIndex);
             DefaultListModel temp = new DefaultListModel();
             
-            for(Object friendReq : myInfo.getPendFriends()){
-                temp.addElement(friendReq);
+            for(ProdInfo prod : myInfo.getWishList()){
+                temp.addElement(prod.getName());
             }
             //System.out.println(myInfo);
             listMyWish.setModel(temp);
@@ -477,6 +480,7 @@ public class Client extends javax.swing.JFrame {
         labelPriceMI = new javax.swing.JLabel();
         progBarMoney = new javax.swing.JProgressBar();
         labelProdImgMI = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         DialogFriendRequest = new javax.swing.JDialog();
         labelRequest = new javax.swing.JLabel();
         btnAccept = new javax.swing.JButton();
@@ -512,7 +516,7 @@ public class Client extends javax.swing.JFrame {
         labelFriendWishList = new javax.swing.JLabel();
         btnRemoveFriend = new javax.swing.JButton();
         btnSendRequest = new javax.swing.JButton();
-        btnFriendName = new javax.swing.JTextField();
+        txtFriendName = new javax.swing.JTextField();
         labelNewFriend = new javax.swing.JLabel();
         panelMyWishList = new javax.swing.JPanel();
         labelMyWish = new javax.swing.JLabel();
@@ -549,6 +553,7 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        textPaneProdDescFI.setEditable(false);
         textPaneProdDescFI.setMaximumSize(new java.awt.Dimension(80, 40));
         scrollPaneProdDescFI.setViewportView(textPaneProdDescFI);
 
@@ -632,6 +637,7 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        textPaneProdDescAI.setEditable(false);
         scrollPaneProdDescAI.setViewportView(textPaneProdDescAI);
 
         labelPriceAI.setText("<price>");
@@ -644,43 +650,37 @@ public class Client extends javax.swing.JFrame {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(scrollPaneProdDescAI, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 172, Short.MAX_VALUE))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(labelProdNameAI)
+                                .addGap(93, 93, 93)
+                                .addComponent(labelPriceAI))
+                            .addComponent(scrollPaneProdDescAI, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(labelProdImgAI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(labelProdNameAI)
-                        .addGap(93, 93, 93)
-                        .addComponent(labelPriceAI)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(108, 108, 108)
-                .addComponent(btnAddAI)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel7Layout.createSequentialGroup()
-                    .addGap(133, 133, 133)
-                    .addComponent(labelProdImgAI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(133, Short.MAX_VALUE)))
+                        .addGap(74, 74, 74)
+                        .addComponent(btnAddAI)))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(60, 60, 60)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelProdNameAI)
-                    .addComponent(labelPriceAI))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollPaneProdDescAI, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelProdNameAI)
+                            .addComponent(labelPriceAI))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(scrollPaneProdDescAI, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelProdImgAI, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnAddAI)
-                .addGap(20, 20, 20))
-            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel7Layout.createSequentialGroup()
-                    .addGap(77, 77, 77)
-                    .addComponent(labelProdImgAI, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
-                    .addGap(77, 77, 77)))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout DialogAvailableItemLayout = new javax.swing.GroupLayout(DialogAvailableItem.getContentPane());
@@ -691,17 +691,22 @@ public class Client extends javax.swing.JFrame {
         );
         DialogAvailableItemLayout.setVerticalGroup(
             DialogAvailableItemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(DialogAvailableItemLayout.createSequentialGroup()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 35, Short.MAX_VALUE))
         );
 
         labelProdNameMI.setText("<product name>");
 
+        textPaneProdDescMI.setEditable(false);
         scrollPaneProdDescMI.setViewportView(textPaneProdDescMI);
 
         labelPriceMI.setText("<price>");
 
         labelProdImgMI.setMaximumSize(new java.awt.Dimension(500, 500));
         labelProdImgMI.setPreferredSize(new java.awt.Dimension(350, 350));
+
+        jLabel11.setText("Contributions so far");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -711,38 +716,40 @@ public class Client extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(labelProdNameMI)
-                        .addGap(93, 93, 93)
-                        .addComponent(labelPriceMI)
-                        .addContainerGap(185, Short.MAX_VALUE))
+                        .addComponent(jLabel11)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(scrollPaneProdDescMI, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                            .addComponent(progBarMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel8Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(labelProdImgMI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addComponent(labelProdNameMI)
+                                .addGap(93, 93, 93)
+                                .addComponent(labelPriceMI))
+                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(progBarMoney, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                                .addComponent(scrollPaneProdDescMI)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(labelProdImgMI, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelProdNameMI)
-                    .addComponent(labelPriceMI))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollPaneProdDescMI, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                .addGap(27, 27, 27)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelProdNameMI)
+                            .addComponent(labelPriceMI))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(scrollPaneProdDescMI, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(68, 68, 68)
+                        .addComponent(labelProdImgMI, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progBarMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel8Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(labelProdImgMI, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addGap(39, 39, 39))
         );
 
         javax.swing.GroupLayout DialogMyItemLayout = new javax.swing.GroupLayout(DialogMyItem.getContentPane());
@@ -1018,9 +1025,9 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
-        btnFriendName.addActionListener(new java.awt.event.ActionListener() {
+        txtFriendName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFriendNameActionPerformed(evt);
+                txtFriendNameActionPerformed(evt);
             }
         });
 
@@ -1038,14 +1045,14 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(btnSendRequest)
                     .addGroup(panelFriendsLayout.createSequentialGroup()
                         .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btnFriendName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtFriendName, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(scrollPanelFriends, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                             .addComponent(labelFriendList, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(107, 107, 107)
                         .addGroup(panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(labelFriendWishList)
                             .addComponent(scrollPanelFriendWish, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         panelFriendsLayout.setVerticalGroup(
             panelFriendsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1063,7 +1070,7 @@ public class Client extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(labelNewFriend)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnFriendName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtFriendName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSendRequest)
                 .addContainerGap())
@@ -1117,12 +1124,12 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelMyWish)
                     .addComponent(btnRemoveItem)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(100, 100, 100)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
                 .addGroup(panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelAvailableItems)
-                    .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
+                    .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         panelMyWishListLayout.setVerticalGroup(
             panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1134,11 +1141,11 @@ public class Client extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMyWishListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMyWishListLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnRemoveItem))
                     .addComponent(scrollPanelAvailableItems, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         mainPane.addTab("My Wishlist", panelMyWishList);
@@ -1163,7 +1170,7 @@ public class Client extends javax.swing.JFrame {
         );
         panelFriendRequestsLayout.setVerticalGroup(
             panelFriendRequestsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+            .addComponent(scrollPanelFriendRequests, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Friend Requests", panelFriendRequests);
@@ -1183,7 +1190,7 @@ public class Client extends javax.swing.JFrame {
         );
         panelNotificationsLayout.setVerticalGroup(
             panelNotificationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
         );
 
         mainPane.addTab("Gifts Notifications", panelNotifications);
@@ -1438,9 +1445,9 @@ public class Client extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnContributeFIActionPerformed
 
-    private void btnFriendNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFriendNameActionPerformed
+    private void txtFriendNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFriendNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnFriendNameActionPerformed
+    }//GEN-LAST:event_txtFriendNameActionPerformed
 
     private void txtRegFnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegFnameActionPerformed
         // TODO add your handling code here:
@@ -1448,12 +1455,22 @@ public class Client extends javax.swing.JFrame {
 
     private void btnSendRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendRequestActionPerformed
         // TODO add your handling code here:
-        
+        String requestedFriend = txtFriendName.getText().trim();
+        // checking if friend already exists
+        for(Object friend : myInfo.getAprvFriends()){
+            if(friend.equals(requestedFriend)) {
+                alreadyFriends = true;
+            } 
+        }
         // prepare obj for log
-        //data = new UserInfo();
+        if(alreadyFriends){
+        JOptionPane.showMessageDialog(this, "You'r Already Friends");
+        }
+        else{
+        data = new UserInfo();
         data.setUsrName(myInfo.getUsrName());
         data.setType("friendRequest");
-        data.setFriendName(btnFriendName.getText().trim());
+        data.setFriendName(txtFriendName.getText().trim());
         
         // obj to json
         String msg = new Gson().toJson(data);
@@ -1470,6 +1487,8 @@ public class Client extends javax.swing.JFrame {
             System.out.println(msg);
             ps.println(msg);
             ps.flush();
+        }
+        
         }
     }//GEN-LAST:event_btnSendRequestActionPerformed
 
@@ -1632,7 +1651,7 @@ public class Client extends javax.swing.JFrame {
 
     private void mainPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mainPaneStateChanged
         // TODO add your handling code here:
-        if (mainPane.getSelectedIndex() >= 2 && mainPane.getSelectedIndex() <= 4) {
+        //if (mainPane.getSelectedIndex() >= 0 && mainPane.getSelectedIndex() <= 4) {
             if (usrIsLogged == true) {
                 // prepare object
                 data = new UserInfo();
@@ -1655,7 +1674,7 @@ public class Client extends javax.swing.JFrame {
                     ps.flush();
                 }
             }
-        }
+       // }
     }//GEN-LAST:event_mainPaneStateChanged
 
     private void txtLogPwKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLogPwKeyPressed
@@ -1741,7 +1760,7 @@ public class Client extends javax.swing.JFrame {
         System.out.println(friendProducts.elementAt(itemIndex).getName());
         
         DialogFriendItem.setLocation(XPOSITION, YPOSITION);
-        DialogFriendItem.setSize(500, 500);
+        DialogFriendItem.setSize(500, 300);
         DialogFriendItem.show();
        }
     }//GEN-LAST:event_listFriendWishMouseClicked
@@ -1766,7 +1785,7 @@ public class Client extends javax.swing.JFrame {
             final int XPOSITION = (screenSize.width - DialogMyItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogMyItem.getHeight())/4 ;
             DialogMyItem.setLocation(XPOSITION, YPOSITION);
-            DialogMyItem.setSize(500, 500);
+            DialogMyItem.setSize(500, 300);
             DialogMyItem.show();
         }
         
@@ -1786,15 +1805,17 @@ public class Client extends javax.swing.JFrame {
             labelPriceAI.setText(Integer.toString(myInfo.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
             textPaneProdDescAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
             labelProdImgAI.setSize(150, 150);
-            ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getAvailableProds().elementAt(listAvailableItems.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgAI.getWidth(), labelProdImgAI.getHeight(), Image.SCALE_DEFAULT));
+            
+            ImageIcon imageIcon = new ImageIcon(new ImageIcon(myInfo.getAvailableProds().elementAt(listAvailableItems.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgAI.getWidth(), labelProdImgAI.getHeight(), Image.SCALE_DEFAULT));
             labelProdImgAI.setIcon(imageIcon);
             final Toolkit toolkit = Toolkit.getDefaultToolkit();
             final Dimension screenSize = toolkit.getScreenSize();
             final int XPOSITION = (screenSize.width - DialogAvailableItem.getWidth())/4 ;
             final int YPOSITION  = (screenSize.height - DialogAvailableItem.getHeight())/4 ;
             DialogAvailableItem.setLocation(XPOSITION, YPOSITION);
-            DialogAvailableItem.setSize(500, 500);
+            DialogAvailableItem.setSize(500, 300);
             DialogAvailableItem.show();
+            
         }
     }//GEN-LAST:event_listAvailableItemsMouseClicked
 
@@ -1865,7 +1886,6 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton btnAddAI;
     private javax.swing.JButton btnContributeFI;
     private javax.swing.JButton btnDecline;
-    private javax.swing.JTextField btnFriendName;
     private javax.swing.JButton btnRemoveFriend;
     private javax.swing.JButton btnRemoveItem;
     private javax.swing.JButton btnSendRequest;
@@ -1875,6 +1895,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1935,6 +1956,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JTextField txtContributionAmountFI;
     private javax.swing.JTextField txtCreditProfile;
     private javax.swing.JTextField txtEmailProfile;
+    private javax.swing.JTextField txtFriendName;
     private javax.swing.JTextField txtFullNameProfile;
     private javax.swing.JPasswordField txtLogPw;
     private javax.swing.JTextField txtLogUsr;
