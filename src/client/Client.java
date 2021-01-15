@@ -11,6 +11,7 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -51,6 +52,7 @@ public class Client extends javax.swing.JFrame {
     Thread th = null;
     boolean serverIsOff = false; // server status
     boolean wishListFire= false; // wishlist integraty flag
+    boolean usrIsLogged=false;
     Vector <ProdInfo> friendProducts;
     Vector friendRequests;
     int availableItemIndex=-1;
@@ -164,7 +166,7 @@ public class Client extends javax.swing.JFrame {
     void repLogMsg(UserInfo data) {
         if (data.getResult().equals("success")) { // move to next panel
             System.out.println("success");
-            
+            usrIsLogged = true;
             
             myInfo = data.copy();
             //System.out.println("My info after copy "+ myInfo.getUsrName());
@@ -217,8 +219,10 @@ public class Client extends javax.swing.JFrame {
             
             DefaultListModel notificationList = new DefaultListModel<>();
             for(ProdInfo prod : myInfo.getCompletedProds()){
-            notificationList.addElement("CONGRATULATIONS!!  Your Friends Got a " +prod.getName());
-            System.out.println( "Product name " +prod.getName());
+            Vector friends = new Vector(data.getContributedFriends());
+        //  friends.set(0,data.getcontributedFriends() );
+                notificationList.addElement("CONGRATULATIONS!! " + friends + " Got you a " + prod.getName());
+                System.out.println("Product name " + prod.getName());
             
             }
             for(String prodName : myInfo.getCompletedContributions()){
@@ -233,7 +237,7 @@ public class Client extends javax.swing.JFrame {
             labelCredit.setText(Integer.toString(myInfo.getCredit()));
             
             
-            cl.next(basePane);
+            cl.show(basePane, "card2");
         
         } else {
             System.out.println("Wrong user name or password"); // give dialog box as wrong usr or pw
@@ -247,11 +251,13 @@ public class Client extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "User Created successfuly");
             System.out.println("success");
         loginRegsPane.setSelectedIndex(0);
+        
         txtRegFname.setText("");
         txtRegLname.setText("");
         txtRegUsr.setText("");
         txtRegPw.setText("");
         txtRegEmail.setText("");
+        
         } else if("1".equals(data.getResult())){
                 JOptionPane.showMessageDialog(this, "User Name already taken");
             
@@ -532,6 +538,7 @@ public class Client extends javax.swing.JFrame {
         txtEmailProfile = new javax.swing.JTextField();
         txtCreditProfile = new javax.swing.JTextField();
         btnUpdateCredit = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         labelProdNameFI.setText("<product name>");
 
@@ -542,6 +549,7 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        textPaneProdDescFI.setMaximumSize(new java.awt.Dimension(80, 40));
         scrollPaneProdDescFI.setViewportView(textPaneProdDescFI);
 
         labelPriceFI.setText("<price>");
@@ -797,6 +805,12 @@ public class Client extends javax.swing.JFrame {
         basePane.setMinimumSize(new java.awt.Dimension(100, 100));
         basePane.setLayout(new java.awt.CardLayout());
 
+        loginRegsPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                loginRegsPaneStateChanged(evt);
+            }
+        });
+
         txtLogUsr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtLogUsrActionPerformed(evt);
@@ -813,6 +827,12 @@ public class Client extends javax.swing.JFrame {
         userLabel.setText("UserName:");
 
         passwdLabel.setText("Password");
+
+        txtLogPw.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtLogPwKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout loginTabLayout = new javax.swing.GroupLayout(loginTab);
         loginTab.setLayout(loginTabLayout);
@@ -947,7 +967,22 @@ public class Client extends javax.swing.JFrame {
         basePane.add(loginRegsPane, "card5");
 
         mainPane.setPreferredSize(new java.awt.Dimension(400, 400));
+        mainPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                mainPaneStateChanged(evt);
+            }
+        });
+        mainPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                mainPaneComponentShown(evt);
+            }
+        });
 
+        listFriends.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listFriendsMouseClicked(evt);
+            }
+        });
         listFriends.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listFriendsValueChanged(evt);
@@ -955,6 +990,11 @@ public class Client extends javax.swing.JFrame {
         });
         scrollPanelFriends.setViewportView(listFriends);
 
+        listFriendWish.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listFriendWishMouseClicked(evt);
+            }
+        });
         listFriendWish.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listFriendWishValueChanged(evt);
@@ -1035,6 +1075,11 @@ public class Client extends javax.swing.JFrame {
 
         labelMyWish.setText("My Wish List");
 
+        listAvailableItems.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listAvailableItemsMouseClicked(evt);
+            }
+        });
         listAvailableItems.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listAvailableItemsValueChanged(evt);
@@ -1051,6 +1096,11 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        listMyWish.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listMyWishMouseClicked(evt);
+            }
+        });
         listMyWish.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listMyWishValueChanged(evt);
@@ -1093,6 +1143,11 @@ public class Client extends javax.swing.JFrame {
 
         mainPane.addTab("My Wishlist", panelMyWishList);
 
+        listFriendRequests.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listFriendRequestsMouseClicked(evt);
+            }
+        });
         listFriendRequests.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 listFriendRequestsValueChanged(evt);
@@ -1160,6 +1215,13 @@ public class Client extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Log out");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelProfileLayout = new javax.swing.GroupLayout(panelProfile);
         panelProfile.setLayout(panelProfileLayout);
         panelProfileLayout.setHorizontalGroup(
@@ -1180,6 +1242,10 @@ public class Client extends javax.swing.JFrame {
                         .addComponent(txtEmailProfile)
                         .addComponent(txtCreditProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)))
                 .addContainerGap(201, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelProfileLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(41, 41, 41))
         );
         panelProfileLayout.setVerticalGroup(
             panelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1203,7 +1269,9 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(txtCreditProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnUpdateCredit)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         mainPane.addTab("Profile", panelProfile);
@@ -1242,65 +1310,12 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRemoveFriendActionPerformed
 
     private void listFriendsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendsValueChanged
-    String friendName = listFriends.getSelectedValue();
-        //System.out.println("Friend name outside if---------------- " + friendName);
-        if (friendName != null) {
-            System.out.println("Friend name inside if---------------- " + friendName);
-            data = new UserInfo();
-            data.setUsrName(friendName);
-            data.setType("fWish");
-            
-            //edit labels
-            labelFriendWishList.setText(friendName + " wants");
-
-            // obj to json
-            String msg = new Gson().toJson(data);
-
-            // send if server is on
-            if (serverIsOff == true) {
-                connClient();
-                if (serverIsOff == false) {
-                    ps.println(msg);
-                    ps.flush();
-                }
-            } else {
-                //System.out.println(msg);
-                ps.println(msg);
-                ps.flush();
-            }
-        }
-        
+    
         
     }//GEN-LAST:event_listFriendsValueChanged
 
     private void listFriendWishValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendWishValueChanged
-       if(wishListFire){
-        // TODO add your handling code here:
-        String prodName = listFriends.getSelectedValue();
-         // fill the comonents of dialogbox with the details of (prodName)
-        final Toolkit toolkit = Toolkit.getDefaultToolkit();
-        final Dimension screenSize = toolkit.getScreenSize();
-        final int XPOSITION = (screenSize.width - DialogFriendItem.getWidth())/4 ;
-        final int YPOSITION  = (screenSize.height - DialogFriendItem.getHeight())/4 ;
-        
-        // fill the components of dialogbox with the details of (prodName)
-        
-        int itemIndex = listFriendWish.getSelectedIndex();
-        System.out.println("listFriendWish"+listFriendWish.getModel());
-        System.out.println("friendProducts" + friendProducts);
-        
-        labelProdNameFI.setText(friendProducts.elementAt(itemIndex).getName()); 
-        labelPriceFI.setText(Integer.toString(friendProducts.elementAt(itemIndex).getPrice()));
-        textPaneProdDescFI.setText(friendProducts.elementAt(itemIndex).getDesc());
-        labelProdImgFI.setSize(150, 150);
-        ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getWishList().elementAt(listFriendWish.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgFI.getWidth(), labelProdImgFI.getHeight(), Image.SCALE_DEFAULT));
-        labelProdImgFI.setIcon(imageIcon);
-        System.out.println(friendProducts.elementAt(itemIndex).getName());
-        
-        DialogFriendItem.setLocation(XPOSITION, YPOSITION);
-        DialogFriendItem.setSize(500, 500);
-        DialogFriendItem.show();
-       }
+       
     }//GEN-LAST:event_listFriendWishValueChanged
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -1382,43 +1397,45 @@ public class Client extends javax.swing.JFrame {
         if(txtContributionAmountFI.getText().isEmpty() ){
              JOptionPane.showMessageDialog(this, "set your contribution first", "Error", JOptionPane.ERROR_MESSAGE);
         }else {
+             int credit = Integer.parseInt(labelCredit.getText().trim());
 
-        int credit = Integer.parseInt(labelCredit.getText().trim());
+             int Amountcontribute = Integer.parseInt(txtContributionAmountFI.getText().trim());
+               if (Amountcontribute < credit) {
+                       data.setType("contribute");
+                       System.out.println(myInfo.getUsrName());
+                        data.setUsrName(myInfo.getUsrName());
 
-        int Amountcontribute = Integer.parseInt(txtContributionAmountFI.getText().trim());
-        if (Amountcontribute < credit) {
-            data.setType("contribute");
-            System.out.println(myInfo.getUsrName());
-            data.setUsrName(myInfo.getUsrName());
+                        ContrDetails contribution = new ContrDetails();
 
-            ContrDetails contribution = new ContrDetails();
+                         contribution.setContrAmount(Amountcontribute);
+                         contribution.setProdName(labelProdNameFI.getText());
+                         contribution.setFriendName(listFriends.getSelectedValue());
+                          data.setContribution(contribution);
+                          System.out.println(data.getContribution().getFriendName());
 
-            contribution.setContrAmount(Amountcontribute);
-            contribution.setProdName(labelProdNameFI.getText());
-            contribution.setFriendName(listFriends.getSelectedValue());
-            data.setContribution(contribution);
-            System.out.println(data.getContribution().getFriendName());
+                           // obj to json
+                           String msg = new Gson().toJson(data);
 
-            // obj to json
-            String msg = new Gson().toJson(data);
-
-            // send if server is on
-            if (serverIsOff == true) {
-                connClient();
-                if (serverIsOff == false) {
-                    ps.println(msg);
-                    ps.flush();
-                }
-            } else {
-                System.out.println(msg);
-                ps.println(msg);
-                ps.flush();
-            }
-        } else {
+                        // send if server is on
+                           if (serverIsOff == true) {
+                            connClient();
+                               if (serverIsOff == false) {
+                                ps.println(msg);
+                                ps.flush();
+                                }
+                                 } else {
+                                    System.out.println(msg);
+                                    ps.println(msg);
+                                    ps.flush();
+                              }                 
+               }
+         else {
             JOptionPane.showMessageDialog(this, "you don't have enough credit", "Error", JOptionPane.ERROR_MESSAGE);
+        
+   
+}
+                
         }
-        }
-    
     }//GEN-LAST:event_btnContributeFIActionPerformed
 
     private void btnFriendNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFriendNameActionPerformed
@@ -1458,23 +1475,7 @@ public class Client extends javax.swing.JFrame {
 
     private void listFriendRequestsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listFriendRequestsValueChanged
         // TODO add your handling code here:
-        if(listFriendRequests.getSelectedValue() !=null){
-        String freqName = listFriendRequests.getSelectedValue();
-        final Toolkit toolkit = Toolkit.getDefaultToolkit();
-        final Dimension screenSize = toolkit.getScreenSize();
-        final int XPOSITION = (screenSize.width - DialogFriendRequest.getWidth())/4 ;
-        final int YPOSITION  = (screenSize.height - DialogFriendRequest.getHeight())/4 ;
         
-        
-       int itemIndex = listFriendRequests.getSelectedIndex();
-        data.setFriendName((String) friendRequests.elementAt(itemIndex));
-        //System.out.println(data.getfriendreq());
-        labelRequest.setText((String) friendRequests.elementAt(itemIndex)+"  Wants to be your friend"); 
-        
-        DialogFriendRequest.setLocation(XPOSITION, YPOSITION);
-        DialogFriendRequest.setSize(300, 300);
-        DialogFriendRequest.show();
-        }
     }//GEN-LAST:event_listFriendRequestsValueChanged
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
@@ -1555,57 +1556,15 @@ public class Client extends javax.swing.JFrame {
 
     private void listAvailableItemsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listAvailableItemsValueChanged
         // TODO add your handling code here:
-        //String freqName = listAvailableItems.getSelectedValue();
         
-        availableItemIndex = listAvailableItems.getSelectedIndex();
-         
-        if(myInfo.getAvailableProds().elementAt(availableItemIndex).getQty()==0)
-        {
-            JOptionPane.showMessageDialog(this, "This Item is Out Of Stock");
-        }else
-        {
-            labelProdNameAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getName()); 
-            labelPriceAI.setText(Integer.toString(myInfo.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
-            textPaneProdDescAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
-            labelProdImgAI.setSize(150, 150);
-        ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getWishList().elementAt(listAvailableItems.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgMI.getWidth(), labelProdImgMI.getHeight(), Image.SCALE_DEFAULT));
-        labelProdImgAI.setIcon(imageIcon);
-            final Toolkit toolkit = Toolkit.getDefaultToolkit();
-            final Dimension screenSize = toolkit.getScreenSize();
-            final int XPOSITION = (screenSize.width - DialogAvailableItem.getWidth())/4 ;
-            final int YPOSITION  = (screenSize.height - DialogAvailableItem.getHeight())/4 ;
-            DialogAvailableItem.setLocation(XPOSITION, YPOSITION);
-            DialogAvailableItem.setSize(500, 500);
-            DialogAvailableItem.show();
-        }
+        
+        
     }//GEN-LAST:event_listAvailableItemsValueChanged
 
     private void listMyWishValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listMyWishValueChanged
         // TODO add your handling code here:
         
-        listMyWishIndex=listMyWish.getSelectedIndex();
-        if(listMyWish.getSelectedValue() != null){ 
-        int percentage = myInfo.getWishList().elementAt(listMyWishIndex).getPaid()*100/myInfo.getWishList().elementAt(listMyWishIndex).getPrice();
-           
-        labelProdNameMI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getName()); 
-            labelPriceMI.setText(Integer.toString(myInfo.getWishList().elementAt(listMyWishIndex).getPrice()) );
-            textPaneProdDescAI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getDesc()); 
-            System.out.println(percentage);
-            progBarMoney.setStringPainted(true);
-            progBarMoney.setValue(percentage);
-            labelProdImgMI.setSize(150, 150);
-            ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getWishList().elementAt(listMyWish.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgMI.getWidth(), labelProdImgMI.getHeight(), Image.SCALE_DEFAULT));
-            labelProdImgMI.setIcon(imageIcon);
-            final Toolkit toolkit = Toolkit.getDefaultToolkit();
-            final Dimension screenSize = toolkit.getScreenSize();
-            final int XPOSITION = (screenSize.width - DialogMyItem.getWidth())/4 ;
-            final int YPOSITION  = (screenSize.height - DialogMyItem.getHeight())/4 ;
-            DialogMyItem.setLocation(XPOSITION, YPOSITION);
-            DialogMyItem.setSize(500, 500);
-            DialogMyItem.show();
-        }
         
-
     }//GEN-LAST:event_listMyWishValueChanged
 
     private void btnRemoveItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveItemActionPerformed
@@ -1666,6 +1625,200 @@ public class Client extends javax.swing.JFrame {
             }
     }//GEN-LAST:event_btnUpdateCreditActionPerformed
 
+    private void mainPaneComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_mainPaneComponentShown
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_mainPaneComponentShown
+
+    private void mainPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mainPaneStateChanged
+        // TODO add your handling code here:
+        if (mainPane.getSelectedIndex() >= 2 && mainPane.getSelectedIndex() <= 4) {
+            if (usrIsLogged == true) {
+                // prepare object
+                data = new UserInfo();
+                data.setType("log");
+                data.setUsrName(myInfo.getUsrName());
+                data.setPw(myInfo.getPw());
+                // obj to json
+                String msg = new Gson().toJson(data);
+
+                // send if server is on
+                if (serverIsOff == true) {
+                    connClient();
+                    if (serverIsOff == false) {
+                        ps.println(msg);
+                        ps.flush();
+                    }
+                } else {
+                    //System.out.println(msg);
+                    ps.println(msg);
+                    ps.flush();
+                }
+            }
+        }
+    }//GEN-LAST:event_mainPaneStateChanged
+
+    private void txtLogPwKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLogPwKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            loginBtn.doClick();
+        }
+    }//GEN-LAST:event_txtLogPwKeyPressed
+
+    private void loginRegsPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_loginRegsPaneStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loginRegsPaneStateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            dis.close();
+            ps.close();
+            servSock.close();
+            usrIsLogged = false;
+            System.out.println("you are logged out");
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cl.show(basePane, "card5");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void listFriendsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listFriendsMouseClicked
+        // TODO add your handling code here:
+        String friendName = listFriends.getSelectedValue();
+        //System.out.println("Friend name outside if---------------- " + friendName);
+        if (friendName != null) {
+            System.out.println("Friend name inside if---------------- " + friendName);
+            data = new UserInfo();
+            data.setUsrName(friendName);
+            data.setType("fWish");
+            
+            //edit labels
+            labelFriendWishList.setText(friendName + " wants");
+
+            // obj to json
+            String msg = new Gson().toJson(data);
+
+            // send if server is on
+            if (serverIsOff == true) {
+                connClient();
+                if (serverIsOff == false) {
+                    ps.println(msg);
+                    ps.flush();
+                }
+            } else {
+                //System.out.println(msg);
+                ps.println(msg);
+                ps.flush();
+            }
+        }
+        
+    }//GEN-LAST:event_listFriendsMouseClicked
+
+    private void listFriendWishMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listFriendWishMouseClicked
+        // TODO add your handling code here:
+        if(wishListFire){
+        // TODO add your handling code here:
+        String prodName = listFriends.getSelectedValue();
+         // fill the comonents of dialogbox with the details of (prodName)
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int XPOSITION = (screenSize.width - DialogFriendItem.getWidth())/4 ;
+        final int YPOSITION  = (screenSize.height - DialogFriendItem.getHeight())/4 ;
+        
+        // fill the components of dialogbox with the details of (prodName)
+        
+        int itemIndex = listFriendWish.getSelectedIndex();
+        System.out.println("listFriendWish"+listFriendWish.getModel());
+        System.out.println("friendProducts" + friendProducts);
+        
+        labelProdNameFI.setText(friendProducts.elementAt(itemIndex).getName()); 
+        labelPriceFI.setText(Integer.toString(friendProducts.elementAt(itemIndex).getPrice()));
+        textPaneProdDescFI.setText(friendProducts.elementAt(itemIndex).getDesc());
+        labelProdImgFI.setSize(150, 150);
+        ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getWishList().elementAt(listFriendWish.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgFI.getWidth(), labelProdImgFI.getHeight(), Image.SCALE_DEFAULT));
+        labelProdImgFI.setIcon(imageIcon);
+        System.out.println(friendProducts.elementAt(itemIndex).getName());
+        
+        DialogFriendItem.setLocation(XPOSITION, YPOSITION);
+        DialogFriendItem.setSize(500, 500);
+        DialogFriendItem.show();
+       }
+    }//GEN-LAST:event_listFriendWishMouseClicked
+
+    private void listMyWishMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listMyWishMouseClicked
+        // TODO add your handling code here:
+        listMyWishIndex=listMyWish.getSelectedIndex();
+        if(listMyWish.getSelectedValue() != null){ 
+        int percentage = myInfo.getWishList().elementAt(listMyWishIndex).getPaid()*100/myInfo.getWishList().elementAt(listMyWishIndex).getPrice();
+           
+        labelProdNameMI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getName()); 
+            labelPriceMI.setText(Integer.toString(myInfo.getWishList().elementAt(listMyWishIndex).getPrice()) );
+            textPaneProdDescAI.setText((String) myInfo.getWishList().elementAt(listMyWishIndex).getDesc()); 
+            System.out.println(percentage);
+            progBarMoney.setStringPainted(true);
+            progBarMoney.setValue(percentage);
+            labelProdImgMI.setSize(150, 150);
+            ImageIcon imageIcon = new ImageIcon(new ImageIcon(myInfo.getWishList().elementAt(listMyWish.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgMI.getWidth(), labelProdImgMI.getHeight(), Image.SCALE_DEFAULT));
+            labelProdImgMI.setIcon(imageIcon);
+            final Toolkit toolkit = Toolkit.getDefaultToolkit();
+            final Dimension screenSize = toolkit.getScreenSize();
+            final int XPOSITION = (screenSize.width - DialogMyItem.getWidth())/4 ;
+            final int YPOSITION  = (screenSize.height - DialogMyItem.getHeight())/4 ;
+            DialogMyItem.setLocation(XPOSITION, YPOSITION);
+            DialogMyItem.setSize(500, 500);
+            DialogMyItem.show();
+        }
+        
+
+    }//GEN-LAST:event_listMyWishMouseClicked
+
+    private void listAvailableItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listAvailableItemsMouseClicked
+        // TODO add your handling code here:
+        availableItemIndex = listAvailableItems.getSelectedIndex();
+         
+        if(myInfo.getAvailableProds().elementAt(availableItemIndex).getQty()==0)
+        {
+            JOptionPane.showMessageDialog(this, "This Item is Out Of Stock");
+        }else
+        {
+            labelProdNameAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getName()); 
+            labelPriceAI.setText(Integer.toString(myInfo.getAvailableProds().elementAt(availableItemIndex).getPrice()) );
+            textPaneProdDescAI.setText((String) myInfo.getAvailableProds().elementAt(availableItemIndex).getDesc()); 
+            labelProdImgAI.setSize(150, 150);
+            ImageIcon imageIcon = new ImageIcon(new ImageIcon(data.getAvailableProds().elementAt(listAvailableItems.getSelectedIndex()).getImg()).getImage().getScaledInstance(labelProdImgAI.getWidth(), labelProdImgAI.getHeight(), Image.SCALE_DEFAULT));
+            labelProdImgAI.setIcon(imageIcon);
+            final Toolkit toolkit = Toolkit.getDefaultToolkit();
+            final Dimension screenSize = toolkit.getScreenSize();
+            final int XPOSITION = (screenSize.width - DialogAvailableItem.getWidth())/4 ;
+            final int YPOSITION  = (screenSize.height - DialogAvailableItem.getHeight())/4 ;
+            DialogAvailableItem.setLocation(XPOSITION, YPOSITION);
+            DialogAvailableItem.setSize(500, 500);
+            DialogAvailableItem.show();
+        }
+    }//GEN-LAST:event_listAvailableItemsMouseClicked
+
+    private void listFriendRequestsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listFriendRequestsMouseClicked
+        // TODO add your handling code here:
+        if(listFriendRequests.getSelectedValue() !=null){
+        String freqName = listFriendRequests.getSelectedValue();
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final Dimension screenSize = toolkit.getScreenSize();
+        final int XPOSITION = (screenSize.width - DialogFriendRequest.getWidth())/4 ;
+        final int YPOSITION  = (screenSize.height - DialogFriendRequest.getHeight())/4 ;
+        
+        
+       int itemIndex = listFriendRequests.getSelectedIndex();
+        data.setFriendName((String) friendRequests.elementAt(itemIndex));
+        //System.out.println(data.getfriendreq());
+        labelRequest.setText((String) friendRequests.elementAt(itemIndex)+"  Wants to be your friend"); 
+        
+        DialogFriendRequest.setLocation(XPOSITION, YPOSITION);
+        DialogFriendRequest.setSize(300, 300);
+        DialogFriendRequest.show();
+        }
+    }//GEN-LAST:event_listFriendRequestsMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -1719,6 +1872,7 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton btnUpdateCredit;
     private javax.swing.JButton clearBtn;
     private javax.swing.JButton createBtn;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
